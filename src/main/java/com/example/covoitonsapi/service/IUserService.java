@@ -7,4 +7,6 @@ import java.util.List;
 public interface IUserService {
 
     List<UserDto> getAllUser();
+
+    Boolean add(UserDto dto);
 }

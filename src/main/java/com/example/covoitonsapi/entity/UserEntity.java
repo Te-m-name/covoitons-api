@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="user")
+@Table(name="users")
 public class UserEntity {
 
     @Id
@@ -27,7 +27,7 @@ public class UserEntity {
     @Column(name="employee_code")
     private Integer employee_code;
 
-    @Column(name="is-admin")
+    @Column(name="is_admin")
     private Boolean is_admin;
 
     @Column(name="created_at")
