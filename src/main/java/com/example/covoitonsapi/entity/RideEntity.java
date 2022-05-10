@@ -33,6 +33,7 @@ public class RideEntity {
     @Column(name="city")
     private String city;
 
+
     public Integer getId() {
         return id;
     }

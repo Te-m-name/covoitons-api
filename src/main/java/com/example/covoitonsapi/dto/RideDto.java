@@ -6,11 +6,17 @@ public class RideDto {
     private String street;
     private Integer post_code;
     private String city;
+
+    private String departure;
+
+    private String arrival;
+
     private Date date;
     private Boolean home_to_office;
     private Integer places;
     private Integer id_user;
 
+    //
     public String getStreet() {
         return street;
     }
@@ -33,6 +39,22 @@ public class RideDto {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(String departure) {
+        this.departure = departure;
+    }
+
+    public String getArrival() {
+        return arrival;
+    }
+
+    public void setArrival(String arrival) {
+        this.arrival = arrival;
     }
 
     public Date getDate() {
