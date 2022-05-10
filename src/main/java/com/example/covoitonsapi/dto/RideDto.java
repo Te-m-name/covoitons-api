@@ -1,19 +1,46 @@
 package com.example.covoitonsapi.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class RideDto {
+    private String street;
+    private Integer post_code;
+    private String city;
 
     private String departure;
 
     private String arrival;
 
+    private Date date;
+    private Boolean home_to_office;
     private Integer places;
+    private Integer id_user;
 
-    private LocalDateTime departure_time;
+    //
+    public String getStreet() {
+        return street;
+    }
 
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
-    // Getters and Setters
+    public Integer getPost_code() {
+        return post_code;
+    }
+
+    public void setPost_code(Integer post_code) {
+        this.post_code = post_code;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public String getDeparture() {
         return departure;
     }
@@ -30,6 +57,22 @@ public class RideDto {
         this.arrival = arrival;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Boolean getHome_to_office() {
+        return home_to_office;
+    }
+
+    public void setHome_to_office(Boolean home_to_office) {
+        this.home_to_office = home_to_office;
+    }
+
     public Integer getPlaces() {
         return places;
     }
@@ -38,13 +81,11 @@ public class RideDto {
         this.places = places;
     }
 
-    public LocalDateTime getDeparture_time() {
-        return departure_time;
+    public Integer getId_user() {
+        return id_user;
     }
 
-    public void setDeparture_time(LocalDateTime departure_time) {
-        this.departure_time = departure_time;
+    public void setId_user(Integer id_user) {
+        this.id_user = id_user;
     }
-
-
 }

@@ -1,38 +1,38 @@
 package com.example.covoitonsapi.entity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@Table(name = "rides")
+@Table(name="rides")
 public class RideEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Integer id;
 
-    @Column(name="departure_time")
-    private LocalDateTime departure_time;
+    @Column(name = "departure_time")
+    private Date departure_time;
 
-    @Column(name="places")
+    @Column(name = "home_to_office")
+    private Boolean home_to_office;
+
+    @Column(name ="places")
     private Integer places;
+
+    @Column(name="id_user")
+    private Integer id_user;
 
     @Column(name="street")
     private String street;
 
-     @Column(name="post_code")
-     private Integer post_code;
+    @Column(name="post_code")
+    private Integer post_code;
 
-     @Column(name="city")
-     private String city;
+    @Column(name="city")
+    private String city;
 
-     @Column(name="home_to_office")
-     private Boolean home_to_office;
-
-
-
-     // Getters and Setters
 
     public Integer getId() {
         return id;
@@ -42,12 +42,20 @@ public class RideEntity {
         this.id = id;
     }
 
-    public LocalDateTime getDeparture_time() {
+    public Date getDeparture_time() {
         return departure_time;
     }
 
-    public void setDeparture_time(LocalDateTime departure_time) {
+    public void setDeparture_time(Date departure_time) {
         this.departure_time = departure_time;
+    }
+
+    public Boolean getHome_to_office() {
+        return home_to_office;
+    }
+
+    public void setHome_to_office(Boolean home_to_office) {
+        this.home_to_office = home_to_office;
     }
 
     public Integer getPlaces() {
@@ -56,6 +64,14 @@ public class RideEntity {
 
     public void setPlaces(Integer places) {
         this.places = places;
+    }
+
+    public Integer getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(Integer id_user) {
+        this.id_user = id_user;
     }
 
     public String getStreet() {
@@ -80,13 +96,5 @@ public class RideEntity {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public Boolean getHome_to_office() {
-        return home_to_office;
-    }
-
-    public void setHome_to_office(Boolean home_to_office) {
-        this.home_to_office = home_to_office;
     }
 }

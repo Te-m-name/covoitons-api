@@ -22,7 +22,7 @@ public class RideService implements IRideService {
 
         RideDto dto = new RideDto();
 
-        dto.setDeparture_time(entity.getDeparture_time());
+        dto.setDate(entity.getDeparture_time());
         dto.setPlaces(entity.getPlaces());
 
         if (entity.getHome_to_office()){
@@ -40,5 +40,22 @@ public class RideService implements IRideService {
     @Override
     public RideDto getById(Integer id) {
         return toDto(rideRepository.findById(id).get());
+    }
+
+    @Override
+    public Integer add(RideDto dto) {
+        RideEntity entity = new RideEntity();
+
+        entity.setCity(dto.getCity());
+        entity.setStreet(dto.getStreet());
+        entity.setPost_code(dto.getPost_code());
+        entity.setDeparture_time(dto.getDate());
+        entity.setHome_to_office(dto.getHome_to_office());
+        entity.setPlaces(dto.getPlaces());
+        entity.setId_user(dto.getId_user());
+
+        entity = rideRepository.saveAndFlush(entity);
+
+        return entity.getId();
     }
 }

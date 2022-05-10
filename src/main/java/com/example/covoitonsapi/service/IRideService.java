@@ -10,4 +10,6 @@ public interface IRideService {
     RideDto toDto(RideEntity entity);
 
     RideDto getById(Integer id);
+    Integer add(RideDto dto);
+
 }
