@@ -1,43 +1,53 @@
 package com.example.covoitonsapi.entity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@Table(name = "rides")
-public class RidesEntity {
+@Table(name="rides")
+public class RideEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer ID;
+    private Integer id;
+
     @Column(name = "departure_time")
-    private LocalDateTime departureTime;
+    private Date departure_time;
+
     @Column(name = "home_to_office")
     private Boolean home_to_office;
-    @Column(name = "places")
+
+    @Column(name ="places")
     private Integer places;
-    @Column(name = "street")
+
+    @Column(name="id_user")
+    private Integer id_user;
+
+    @Column(name="street")
     private String street;
-    @Column(name = "post_code")
+
+    @Column(name="post_code")
     private Integer post_code;
-    @Column(name = "city")
+
+    @Column(name="city")
     private String city;
 
-    public Integer getID() {
-        return ID;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setID(Integer ID) {
-        this.ID = ID;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public LocalDateTime getDepartureTime() {
-        return departureTime;
+    public Date getDeparture_time() {
+        return departure_time;
     }
 
-    public void setDepartureTime(LocalDateTime departureTime) {
-        this.departureTime = departureTime;
+    public void setDeparture_time(Date departure_time) {
+        this.departure_time = departure_time;
     }
 
     public Boolean getHome_to_office() {
@@ -54,6 +64,14 @@ public class RidesEntity {
 
     public void setPlaces(Integer places) {
         this.places = places;
+    }
+
+    public Integer getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(Integer id_user) {
+        this.id_user = id_user;
     }
 
     public String getStreet() {
