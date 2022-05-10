@@ -2,6 +2,7 @@ package com.example.covoitonsapi.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.covoitonsapi.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +35,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        log.info("Username is: {}", email);
+        UserDto credentials;
+        try {
+            credentials = new ObjectMapper().readValue(request.getInputStream(), UserDto.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String email = credentials.getEmail();
+        String password = credentials.getPassword();
+        log.info("Email is: {}", email);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         return authenticationManager.authenticate(authenticationToken);
     }
