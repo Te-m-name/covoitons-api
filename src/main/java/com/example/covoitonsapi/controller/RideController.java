@@ -7,9 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("ride")
+
 public class RideController {
 
     @Autowired
@@ -32,12 +36,22 @@ public class RideController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<Integer>add(@RequestBody RideDto dto){
+    public ResponseEntity<Integer> add(@RequestBody RideDto dto){
 
         try{
             Integer id = rideService.add(dto);
             return  new ResponseEntity(id, HttpStatus.OK);
         }catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("getAll")
+    public ResponseEntity<List<RideDto>> getAll() {
+        try {
+            return new ResponseEntity(rideService.getAllRides(), HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

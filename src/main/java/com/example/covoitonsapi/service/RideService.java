@@ -6,6 +6,9 @@ import com.example.covoitonsapi.repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class RideService implements IRideService {
 
@@ -62,5 +65,11 @@ public class RideService implements IRideService {
         entity = rideRepository.saveAndFlush(entity);
 
         return entity.getId();
+    }
+
+    public List<RideDto> getAllRides () {
+        List<RideEntity> ridesList = rideRepository.findAll();
+
+        return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 }
