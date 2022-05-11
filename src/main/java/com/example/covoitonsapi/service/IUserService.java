@@ -8,5 +8,5 @@ public interface IUserService {
 
     List<UserDto> getAllUser();
 
-    Boolean add(UserDto dto);
+    Boolean add(UserDto dto) throws Exception;
 }
