@@ -68,9 +68,16 @@ public class RideService implements IRideService {
         return entity.getId();
     }
 
+    @Override
     public List<RideDto> getAllRides () {
         List<RideEntity> ridesList = rideRepository.findAll();
 
+        return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RideDto> getRideByCity(String city) {
+        List<RideEntity> ridesList = rideRepository.findByCity(city);
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 }
