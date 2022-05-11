@@ -19,11 +19,15 @@ public class UserController {
     private UserService service;
 
     @PostMapping("add")
-    public ResponseEntity<Boolean> add(@RequestBody UserDto dto){
+    public ResponseEntity<Boolean> add(@RequestBody UserDto dto) throws Exception{
 
         if(!dto.getPassword().equals(dto.getConfirm_password())){
             return new ResponseEntity("Mot de passe incorrect", HttpStatus.BAD_REQUEST);
         }
+        if(!dto.getEmail().endsWith("@ipipoe.com")){
+            return new ResponseEntity("Merci d'utiliser votre email d'entreprise", HttpStatus.BAD_REQUEST);
+        }
+
         try{
             service.add(dto);
             return new ResponseEntity(true, HttpStatus.OK);
@@ -37,7 +41,6 @@ public class UserController {
     public ResponseEntity<UserDto> getCurrentUser() {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() != "anonymousUser") {
             try {
-                log.info("--------------- {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
                 UserDto currentUser = service.getCurrentUser();
                 return new ResponseEntity(currentUser, HttpStatus.OK);
             } catch(Exception e) {

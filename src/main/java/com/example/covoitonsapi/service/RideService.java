@@ -40,6 +40,7 @@ public class RideService implements IRideService {
         dto.setCity(entity.getCity());
         dto.setHome_to_office(entity.getHome_to_office());
         dto.setId_user(entity.getId_user());
+        dto.setId_ride(entity.getId());
 
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
@@ -76,9 +77,16 @@ public class RideService implements IRideService {
         return entity.getId();
     }
 
+    @Override
     public List<RideDto> getAllRides () {
         List<RideEntity> ridesList = rideRepository.findAll();
 
+        return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RideDto> getRideByCity(String city) {
+        List<RideEntity> ridesList = rideRepository.findByCity(city);
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 }

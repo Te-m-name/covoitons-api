@@ -3,6 +3,8 @@ package com.example.covoitonsapi.dto;
 import java.util.Date;
 
 public class RideDto {
+
+    private Integer id_ride;
     private String street;
     private Integer post_code;
     private String city;
@@ -87,5 +89,13 @@ public class RideDto {
 
     public void setId_user(Integer id_user) {
         this.id_user = id_user;
+    }
+
+    public Integer getId_ride() {
+        return id_ride;
+    }
+
+    public void setId_ride(Integer id_ride) {
+        this.id_ride = id_ride;
     }
 }
