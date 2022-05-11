@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -69,5 +70,18 @@ public class UserService implements IUserService, UserDetailsService {
 
         return true;
     }
+
+    @Override
+    public UserDto getCurrentUser() {
+        UserEntity currentUser = repository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        UserDto dto = new UserDto();
+        dto.setEmail(currentUser.getEmail());
+        dto.setFirstname(currentUser.getFirstname());
+        dto.setLastname(currentUser.getLastname());
+        dto.setIs_admin(currentUser.getIs_admin());
+
+        return dto;
+    }
+
 
 }

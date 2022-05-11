@@ -9,4 +9,6 @@ public interface IUserService {
     List<UserDto> getAllUser();
 
     Boolean add(UserDto dto);
+
+    UserDto getCurrentUser();
 }

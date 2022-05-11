@@ -6,6 +6,7 @@ public class UserDto {
     private String firstname;
     private String email;
     private Integer employee_code;
+    private Boolean is_admin;
     private String password;
     private String confirm_password;
 
@@ -15,6 +16,14 @@ public class UserDto {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Boolean getIs_admin() {
+        return is_admin;
+    }
+
+    public void setIs_admin(Boolean is_admin) {
+        this.is_admin = is_admin;
     }
 
     public String getLastname() {
