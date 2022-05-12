@@ -1,19 +1,27 @@
 package com.example.covoitonsapi.service;
 
 import com.example.covoitonsapi.dto.RideDto;
+import com.example.covoitonsapi.dto.UserDto;
 import com.example.covoitonsapi.entity.RideEntity;
+import com.example.covoitonsapi.entity.UserEntity;
 import com.example.covoitonsapi.repository.RideRepository;
+import com.example.covoitonsapi.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class RideService implements IRideService {
 
     @Autowired
     private RideRepository rideRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Boolean exist(Integer id) {
@@ -53,6 +61,7 @@ public class RideService implements IRideService {
 
     @Override
     public Integer add(RideDto dto) {
+        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         RideEntity entity = new RideEntity();
 
         entity.setCity(dto.getCity());
@@ -61,7 +70,7 @@ public class RideService implements IRideService {
         entity.setDeparture_time(dto.getDate());
         entity.setHome_to_office(dto.getHome_to_office());
         entity.setPlaces(dto.getPlaces());
-        entity.setId_user(dto.getId_user());
+        entity.setId_user(currentUser.getID());
 
         entity = rideRepository.saveAndFlush(entity);
 

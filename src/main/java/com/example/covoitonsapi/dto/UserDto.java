@@ -1,12 +1,30 @@
 package com.example.covoitonsapi.dto;
 
 public class UserDto {
+    private Integer id;
     private String lastname;
     private String firstname;
     private String email;
     private Integer employee_code;
+    private Boolean is_admin;
     private String password;
     private String confirm_password;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Boolean getIs_admin() {
+        return is_admin;
+    }
+
+    public void setIs_admin(Boolean is_admin) {
+        this.is_admin = is_admin;
+    }
 
     public String getLastname() {
         return lastname;
