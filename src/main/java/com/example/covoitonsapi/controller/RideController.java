@@ -35,6 +35,19 @@ public class RideController {
         return new ResponseEntity(dto, HttpStatus.OK);
     }
 
+    @GetMapping("getNextRide/")
+    public ResponseEntity<RideDto> getNextRide() {
+
+        // verifier si le tajet existe ou non
+        if (!rideService.exist(ID))
+            return new ResponseEntity("le trajet n'existe pas", HttpStatus.NOT_FOUND);
+
+        // on recupere le trajet transformé en amont en DTO
+        RideDto dto = rideService.getById(ID);
+
+        return new ResponseEntity(dto, HttpStatus.OK);
+    }
+
     @PostMapping("add")
     public ResponseEntity<Integer> add(@RequestBody RideDto dto){
 

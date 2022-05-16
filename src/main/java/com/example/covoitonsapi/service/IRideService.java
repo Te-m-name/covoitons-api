@@ -13,5 +13,6 @@ public interface IRideService {
     Integer add(RideDto dto);
     List<RideDto> getAllRides();
     List<RideDto> getRideByCity(String city);
+    RideDto getNextRide();
 
 }

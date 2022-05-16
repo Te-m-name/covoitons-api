@@ -14,4 +14,8 @@ public interface RideRepository extends JpaRepository<RideEntity, Integer> {
     List<RideEntity> getRidesByCity(String city);
 
     List<RideEntity> findByCity(String city);
+
+    @Query(value = "    select limit 1 " +
+            "           from rides join rides_users on rides.id = rides_users.id_ride " +
+            "                       join users on ")
 }
