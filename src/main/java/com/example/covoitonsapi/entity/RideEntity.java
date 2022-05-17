@@ -15,13 +15,16 @@ public class RideEntity {
     @Column(name = "departure_time")
     private Date departure_time;
 
+    @Column(name = "date")
+    private Date date;
+
     @Column(name = "home_to_office")
     private Boolean home_to_office;
 
     @Column(name ="places")
     private Integer places;
 
-    @Column(name="id_user")
+    @Column(name = "id_driver")
     private Integer id_user;
 
     @Column(name="street")
@@ -96,5 +99,13 @@ public class RideEntity {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
