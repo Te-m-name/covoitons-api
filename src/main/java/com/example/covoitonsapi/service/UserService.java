@@ -96,6 +96,7 @@ public class UserService implements IUserService, UserDetailsService {
         dto.setFirstname(currentUser.getFirstname());
         dto.setLastname(currentUser.getLastname());
         dto.setIs_admin(currentUser.getIs_admin());
+        dto.setId(currentUser.getID());
 
         return dto;
     }
