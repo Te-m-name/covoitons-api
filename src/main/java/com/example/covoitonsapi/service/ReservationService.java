@@ -24,4 +24,14 @@ public class ReservationService implements IReservationService{
 
         return true;
     }
+
+    @Override
+    public Boolean canceled(ReservationDto dto) {
+
+        RidesUsersEntity entity = new RidesUsersEntity();
+        entity.setId(dto.getId());
+
+        repository.deleteById(entity.getId());
+        return null;
+    }
 }

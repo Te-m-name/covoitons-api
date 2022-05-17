@@ -2,8 +2,17 @@ package com.example.covoitonsapi.dto;
 
 public class ReservationDto {
 
+    private Integer id;
     private Integer user_id;
     private Integer ride_id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getUser_id() {
         return user_id;

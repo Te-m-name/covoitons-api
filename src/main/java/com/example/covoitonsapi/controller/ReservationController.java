@@ -25,4 +25,15 @@ public class ReservationController {
         }
         return  new ResponseEntity(true, HttpStatus.OK);
     }
+
+    @PostMapping("cancelReservation")
+    public ResponseEntity<Boolean> canceled(@RequestBody ReservationDto dto){
+
+        try{
+            reservationService.canceled(dto);
+        }catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(true, HttpStatus.OK);
+    }
 }
