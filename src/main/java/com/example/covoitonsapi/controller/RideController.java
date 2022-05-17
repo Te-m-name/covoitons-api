@@ -62,11 +62,8 @@ public class RideController {
 
     @GetMapping("get")
     public ResponseEntity<List<RideDto>> searchByCity(@RequestParam String city, @RequestParam Boolean home_to_office, @RequestParam String date) {
-        LocalDate toDate = LocalDate.parse(date);
-        log.info("ici {}", toDate);
         try {
-
-
+            LocalDate toDate = LocalDate.parse(date);
             return new ResponseEntity(rideService.getRideByCity(city, home_to_office, toDate), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
