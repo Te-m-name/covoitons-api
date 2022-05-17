@@ -64,4 +64,13 @@ public class RideController {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("getLast")
+    public ResponseEntity<List<RideDto>> getLast() {
+        try {
+            return new ResponseEntity(rideService.getLast5Rides(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

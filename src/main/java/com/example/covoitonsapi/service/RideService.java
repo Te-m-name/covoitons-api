@@ -89,4 +89,10 @@ public class RideService implements IRideService {
         List<RideEntity> ridesList = rideRepository.findByCity(city);
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
+
+    @Override
+    public List<RideDto> getLast5Rides() {
+        List<RideEntity> lastRides = rideRepository.findTop4ByOrderByIdDesc();
+        return lastRides.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
 }

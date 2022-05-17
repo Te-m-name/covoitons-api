@@ -14,4 +14,6 @@ public interface RideRepository extends JpaRepository<RideEntity, Integer> {
     List<RideEntity> getRidesByCity(String city);
 
     List<RideEntity> findByCity(String city);
+
+    List<RideEntity> findTop4ByOrderByIdDesc();
 }

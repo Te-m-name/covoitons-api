@@ -14,4 +14,6 @@ public interface IRideService {
     List<RideDto> getAllRides();
     List<RideDto> getRideByCity(String city);
 
+    List<RideDto> getLast5Rides();
+
 }
