@@ -11,6 +11,10 @@ public class RideEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+    /*
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_rider")
+    private UserEntity userEntity; */
 
     @Column(name = "departure_time")
     private Date departure_time;

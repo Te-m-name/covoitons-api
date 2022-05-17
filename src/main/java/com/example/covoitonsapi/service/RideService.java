@@ -42,6 +42,7 @@ public class RideService implements IRideService {
         dto.setId_user(entity.getId_user());
         dto.setId_ride(entity.getId());
 
+
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
             dto.setArrival("IPIPOE");
