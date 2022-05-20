@@ -13,12 +13,21 @@ public class RideDto {
 
     private String arrival;
 
+    private Date departure_date;
+
     private Date date;
     private Boolean home_to_office;
     private Integer places;
     private Integer id_user;
 
-    //
+    public Date getDeparture_date() {
+        return departure_date;
+    }
+
+    public void setDeparture_date(Date departure_date) {
+        this.departure_date = departure_date;
+    }
+
     public String getStreet() {
         return street;
     }

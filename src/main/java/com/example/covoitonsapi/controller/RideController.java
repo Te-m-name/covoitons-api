@@ -2,18 +2,22 @@ package com.example.covoitonsapi.controller;
 
 import com.example.covoitonsapi.dto.RideDto;
 import com.example.covoitonsapi.service.RideService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("ride")
-
+@Slf4j
 public class RideController {
 
     @Autowired
@@ -69,10 +73,20 @@ public class RideController {
         }
     }
 
-    @GetMapping("searchCity/{city}")
-    public ResponseEntity<List<RideDto>> searchByCity(@PathVariable String city) {
+    @GetMapping("get")
+    public ResponseEntity<List<RideDto>> searchByCity(@RequestParam String city, @RequestParam Boolean home_to_office, @RequestParam String date) {
         try {
-            return new ResponseEntity(rideService.getRideByCity(city), HttpStatus.OK);
+            LocalDate toDate = LocalDate.parse(date);
+            return new ResponseEntity(rideService.getRideByCity(city, home_to_office, toDate), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("getLast")
+    public ResponseEntity<List<RideDto>> getLast() {
+        try {
+            return new ResponseEntity(rideService.getLast5Rides(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
