@@ -59,13 +59,23 @@ public class RideController {
     @PostMapping("add")
     public ResponseEntity<Integer> add(@RequestBody RideDto dto){
 
+        Date today = new Date();
+        int test_date = dto.getDate().compareTo(today);
+
+        if(test_date<0){
+            return new ResponseEntity("Date incorrecte", HttpStatus.BAD_REQUEST);
+        }
+
+        if(dto.getPlaces()<1){
+            return new ResponseEntity("Nombre de place incorrect", HttpStatus.BAD_REQUEST);
+        }
+
         try{
             Integer id = rideService.add(dto);
             return  new ResponseEntity(id, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping("getAll")
