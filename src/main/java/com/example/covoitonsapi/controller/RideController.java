@@ -1,6 +1,7 @@
 package com.example.covoitonsapi.controller;
 
 import com.example.covoitonsapi.dto.RideDto;
+import com.example.covoitonsapi.entity.RideEntity;
 import com.example.covoitonsapi.service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,17 +36,20 @@ public class RideController {
         return new ResponseEntity(dto, HttpStatus.OK);
     }
 
-    @GetMapping("getNextRide/")
-    public ResponseEntity<RideDto> getNextRide() {
+    @GetMapping("getNextRide/{id}")
+    public ResponseEntity<RideDto> getNextRide(@PathVariable String id) {
 
-        // verifier si le tajet existe ou non
-        if (!rideService.exist(ID))
-            return new ResponseEntity("le trajet n'existe pas", HttpStatus.NOT_FOUND);
+        Integer ID = Integer.parseInt(id);
 
-        // on recupere le trajet transformé en amont en DTO
-        RideDto dto = rideService.getById(ID);
+        RideDto dto = rideService.getNextRide(ID);
 
-        return new ResponseEntity(dto, HttpStatus.OK);
+        try {
+            return new ResponseEntity(dto, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity("Aucun trajet réservé", HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @PostMapping("add")
@@ -64,6 +68,22 @@ public class RideController {
     public ResponseEntity<List<RideDto>> getAll() {
         try {
             return new ResponseEntity(rideService.getAllRides(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("bookedRides/{id}")
+    public ResponseEntity<List<RideDto>> getBookedRides(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity(rideService.getBookedRides(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("proposedRides/{id}")
+    public ResponseEntity<List<RideDto>> getProposedRides(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity(rideService.getProposedRides(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

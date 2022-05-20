@@ -13,6 +13,8 @@ public interface IRideService {
     Integer add(RideDto dto);
     List<RideDto> getAllRides();
     List<RideDto> getRideByCity(String city);
-    RideDto getNextRide();
+    List<RideDto> getBookedRides(Integer id);
+    List<RideDto> getProposedRides(Integer id);
+    RideDto getNextRide(Integer id);
 
 }
