@@ -24,11 +24,8 @@ public class RideEntity {
     @Column(name ="places")
     private Integer places;
 
-<<<<<<< HEAD
-    @Column(name="id_driver")
-=======
+
     @Column(name = "id_driver")
->>>>>>> develop
     private Integer id_user;
 
     @Column(name="street")
