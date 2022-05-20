@@ -24,6 +24,7 @@ public class RideEntity {
     @Column(name ="places")
     private Integer places;
 
+
     @Column(name = "id_driver")
     private Integer id_user;
 
