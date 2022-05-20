@@ -39,11 +39,6 @@ public class UserEntity {
 
     @Column(name="deleted_at")
     private LocalDateTime deleted_at;
-    /*
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_rider", referencedColumnName = "id")
-    private List<RideEntity> rideEntityList;*/
-
 
     public Integer getID() {
         return ID;

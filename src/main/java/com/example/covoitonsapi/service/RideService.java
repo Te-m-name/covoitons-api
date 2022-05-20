@@ -1,7 +1,6 @@
 package com.example.covoitonsapi.service;
 
 import com.example.covoitonsapi.dto.RideDto;
-import com.example.covoitonsapi.dto.UserDto;
 import com.example.covoitonsapi.entity.RideEntity;
 import com.example.covoitonsapi.entity.UserEntity;
 import com.example.covoitonsapi.repository.RideRepository;
@@ -24,14 +23,14 @@ public class RideService implements IRideService {
     private UserRepository userRepository;
 
     @Override
-    public Boolean exist(Integer id) {
-        return rideRepository.existsById(id);
-    }
+    public Boolean exist(Integer id) { return rideRepository.existsById(id); }
 
     @Override
     public RideDto toDto(RideEntity entity) {
 
         RideDto dto = new RideDto();
+
+        UserEntity userEntity = userRepository.findById(entity.getId_user()).get();
 
         dto.setDate(entity.getDeparture_time());
         dto.setPlaces(entity.getPlaces());
@@ -41,7 +40,8 @@ public class RideService implements IRideService {
         dto.setHome_to_office(entity.getHome_to_office());
         dto.setId_user(entity.getId_user());
         dto.setId_ride(entity.getId());
-
+        dto.setDriverFirstname(userEntity.getFirstname());
+        dto.setDriverLastname(userEntity.getLastname());
 
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
@@ -57,7 +57,7 @@ public class RideService implements IRideService {
 
     @Override
     public RideDto getById(Integer id) {
-        return toDto(rideRepository.findById(id).get());
+         return toDto(rideRepository.findById(id).get());
     }
 
     @Override
@@ -81,7 +81,6 @@ public class RideService implements IRideService {
     @Override
     public List<RideDto> getAllRides () {
         List<RideEntity> ridesList = rideRepository.findAll();
-
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 
