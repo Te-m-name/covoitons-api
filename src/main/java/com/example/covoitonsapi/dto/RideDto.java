@@ -8,11 +8,8 @@ public class RideDto {
     private String street;
     private Integer post_code;
     private String city;
-
     private String departure;
-
     private String arrival;
-
     private Date date;
     private Boolean home_to_office;
     private Integer places;
