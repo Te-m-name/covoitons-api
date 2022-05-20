@@ -8,18 +8,14 @@ public class RideDto {
     private String street;
     private Integer post_code;
     private String city;
-
     private String departure;
-
     private String arrival;
-
+    private Date departure_date;
     private Date date;
     private Boolean home_to_office;
     private Integer places;
     private Integer id_user;
-
     private String driverFirstname;
-
     private String driverLastname;
 
 
@@ -38,6 +34,14 @@ public class RideDto {
 
     public void setDriverLastname(String driverLastname) {
         this.driverLastname = driverLastname;
+    }
+
+    public Date getDeparture_date() {
+        return departure_date;
+    }
+
+    public void setDeparture_date(Date departure_date) {
+        this.departure_date = departure_date;
     }
 
     public String getStreet() {

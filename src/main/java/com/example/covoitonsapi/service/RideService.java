@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,6 +75,7 @@ public class RideService implements IRideService {
         entity.setHome_to_office(dto.getHome_to_office());
         entity.setPlaces(dto.getPlaces());
         entity.setId_user(currentUser.getID());
+        entity.setDate(dto.getDeparture_date());
 
         entity = rideRepository.saveAndFlush(entity);
 
@@ -85,8 +89,14 @@ public class RideService implements IRideService {
     }
 
     @Override
-    public List<RideDto> getRideByCity(String city) {
-        List<RideEntity> ridesList = rideRepository.findByCity(city);
+    public List<RideDto> getRideByCity(String city, Boolean home_to_office, LocalDate date) {
+        List<RideEntity> ridesList = rideRepository.findByCityAndHome_to_officeAndDeparture_time(city, home_to_office, date);
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RideDto> getLast5Rides() {
+        List<RideEntity> lastRides = rideRepository.findTop5ByOrderByIdDesc();
+        return lastRides.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 }
