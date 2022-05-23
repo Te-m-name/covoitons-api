@@ -95,6 +95,21 @@ public class RideService implements IRideService {
     }
 
     @Override
+    public List<RideDto> getBookedRides(Integer id) {
+        List<RideEntity> bookedRides = rideRepository.bookedRides(id);
+        return bookedRides.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RideDto> getProposedRides(Integer id) {
+        List<RideEntity> proposedRides = rideRepository.proposedRides(id);
+        return proposedRides.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
+
+    public RideDto getNextRide(Integer id) {
+        RideEntity nextRide = rideRepository.nextRide(id);
+        return toDto(nextRide);
+    }
     public List<RideDto> getLast5Rides() {
         List<RideEntity> lastRides = rideRepository.findTop5ByOrderByIdDesc();
         return lastRides.stream().map(e -> toDto(e)).collect(Collectors.toList());

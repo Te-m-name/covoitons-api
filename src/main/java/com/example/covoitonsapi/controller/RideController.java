@@ -1,6 +1,7 @@
 package com.example.covoitonsapi.controller;
 
 import com.example.covoitonsapi.dto.RideDto;
+import com.example.covoitonsapi.entity.RideEntity;
 import com.example.covoitonsapi.service.RideService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,22 @@ public class RideController {
         return new ResponseEntity(dto, HttpStatus.OK);
     }
 
+    @GetMapping("getNextRide/{id}")
+    public ResponseEntity<RideDto> getNextRide(@PathVariable String id) {
+
+        Integer ID = Integer.parseInt(id);
+
+        RideDto dto = rideService.getNextRide(ID);
+
+        try {
+            return new ResponseEntity(dto, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity("Aucun trajet réservé", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
     @PostMapping("add")
     public ResponseEntity<Integer> add(@RequestBody RideDto dto){
 
@@ -54,6 +71,22 @@ public class RideController {
     public ResponseEntity<List<RideDto>> getAll() {
         try {
             return new ResponseEntity(rideService.getAllRides(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("bookedRides/{id}")
+    public ResponseEntity<List<RideDto>> getBookedRides(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity(rideService.getBookedRides(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("proposedRides/{id}")
+    public ResponseEntity<List<RideDto>> getProposedRides(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity(rideService.getProposedRides(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
