@@ -1,7 +1,9 @@
 package com.example.covoitonsapi.controller;
 
 import com.example.covoitonsapi.dto.UserDto;
+import com.example.covoitonsapi.service.RegistrationService;
 import com.example.covoitonsapi.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,13 +15,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("user")
 @Slf4j
+@AllArgsConstructor
 public class UserController {
 
     @Autowired
     private UserService service;
 
+    private final RegistrationService registrationService;
+
     @PostMapping("add")
-    public ResponseEntity<Boolean> add(@RequestBody UserDto dto) throws Exception{
+    public ResponseEntity<String> add(@RequestBody UserDto dto) throws Exception{
 
         if(!dto.getPassword().equals(dto.getConfirm_password())){
             return new ResponseEntity("Mot de passe incorrect", HttpStatus.BAD_REQUEST);
@@ -29,12 +34,17 @@ public class UserController {
         }
 
         try{
-            service.add(dto);
-            return new ResponseEntity(true, HttpStatus.OK);
+            String token = registrationService.register(dto);
+            return new ResponseEntity(token, HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @GetMapping(path = "confirm")
+    public String confirm(@RequestParam("token") String token) {
+        return registrationService.confirmToken(token);
     }
 
     @GetMapping("current-user")

@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class UserService implements IUserService, UserDetailsService {
 
     @Autowired
     private UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
+    private final ConfirmationService confirmationService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -62,27 +63,22 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public Boolean add(UserDto dto) throws Exception {
+    public String add(UserEntity entity) throws Exception {
 
-        EmployeeEntity emp = new EmployeeEntity();
-        try{
-            emp= employeeRepository.findById(dto.getEmployee_code()).get();
-        }catch (Exception e){
-            throw new Exception ("code employé inconnu");
+        Boolean userExists = repository.existsByEmail(entity.getEmail());
+
+        if (userExists) {
+            throw new IllegalStateException("Email déjà utilisé");
         }
 
-        if(dto.getEmail().equals(emp.getEmail())){
-            UserEntity entity = new UserEntity();
-            entity.setFirstname(dto.getFirstname());
-            entity.setLastname(dto.getLastname());
-            entity.setEmail(dto.getEmail());
-            entity.setEmployee_code(dto.getEmployee_code());
-            entity.setPassword(passwordEncoder.encode(dto.getPassword()));
-            entity.setUpdated_at(LocalDateTime.now());
-            entity.setCreated_at(LocalDateTime.now());
-            entity.setIs_admin(false);
+//        EmployeeEntity emp;
+//        try {
+//            emp = employeeRepository.findById(entity.getEmployee_code()).get();
+//        } catch (Exception e){
+//            throw new Exception ("code employé inconnu");
+//        }
 
-            repository.saveAndFlush(entity);
+        repository.saveAndFlush(entity);
 
             String token = UUID.randomUUID().toString();
             ConfirmationEntity confirmationToken = new ConfirmationEntity(
@@ -92,10 +88,29 @@ public class UserService implements IUserService, UserDetailsService {
                     entity
             );
 
-            return true;
-        } else{
-            throw new Exception("Email / code employé incorrect");
-        }
+            confirmationService.saveConfirmationToken(confirmationToken);
+            return token;
+
+//        if(entity.getEmail().equals(emp.getEmail())){
+//            repository.saveAndFlush(entity);
+//
+//            String token = UUID.randomUUID().toString();
+//            ConfirmationEntity confirmationToken = new ConfirmationEntity(
+//                    token,
+//                    LocalDateTime.now(),
+//                    LocalDateTime.now().plusMinutes(15),
+//                    entity
+//            );
+//
+//            confirmationService.saveConfirmationToken(confirmationToken);
+//            return token;
+//        } else {
+//            throw new Exception("Email / code employé incorrect");
+//        }
+    }
+
+    public int enableUser(String email) {
+        return repository.enableUser(email);
     }
 
     @Override
