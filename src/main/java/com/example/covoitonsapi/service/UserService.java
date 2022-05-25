@@ -1,6 +1,7 @@
 package com.example.covoitonsapi.service;
 
 import com.example.covoitonsapi.dto.UserDto;
+import com.example.covoitonsapi.entity.ConfirmationEntity;
 import com.example.covoitonsapi.entity.EmployeeEntity;
 import com.example.covoitonsapi.entity.UserEntity;
 import com.example.covoitonsapi.repository.EmployeeRepository;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -81,6 +83,14 @@ public class UserService implements IUserService, UserDetailsService {
             entity.setIs_admin(false);
 
             repository.saveAndFlush(entity);
+
+            String token = UUID.randomUUID().toString();
+            ConfirmationEntity confirmationToken = new ConfirmationEntity(
+                    token,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().plusMinutes(15),
+                    entity
+            );
 
             return true;
         } else{

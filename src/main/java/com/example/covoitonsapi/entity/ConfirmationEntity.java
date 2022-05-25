@@ -36,12 +36,10 @@ public class ConfirmationEntity {
     public ConfirmationEntity(String token,
                               LocalDateTime createdAt,
                               LocalDateTime expiresAt,
-                              LocalDateTime confirmedAt,
                               UserEntity user) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
-        this.confirmedAt = confirmedAt;
         this.user = user;
     }
 }
