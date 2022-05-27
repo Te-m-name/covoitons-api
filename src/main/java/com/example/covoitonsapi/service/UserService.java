@@ -88,7 +88,7 @@ public class UserService implements IUserService, UserDetailsService {
             ConfirmationEntity confirmationToken = new ConfirmationEntity(
                     token,
                     LocalDateTime.now(),
-                    LocalDateTime.now().plusMinutes(15),
+                    LocalDateTime.now().plusMinutes(60),
                     entity
             );
 

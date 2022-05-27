@@ -8,17 +8,33 @@ public class RideDto {
     private String street;
     private Integer post_code;
     private String city;
-
     private String departure;
-
     private String arrival;
-
     private Date departure_date;
-
     private Date date;
     private Boolean home_to_office;
     private Integer places;
     private Integer id_user;
+    private String driverFirstname;
+    private String driverLastname;
+
+
+    //Getters & Setters
+    public String getDriverFirstname() {
+        return driverFirstname;
+    }
+
+    public void setDriverFirstname(String driverFistname) {
+        this.driverFirstname = driverFistname;
+    }
+
+    public String getDriverLastname() {
+        return driverLastname;
+    }
+
+    public void setDriverLastname(String driverLastname) {
+        this.driverLastname = driverLastname;
+    }
 
     public Date getDeparture_date() {
         return departure_date;
