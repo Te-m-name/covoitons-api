@@ -5,7 +5,6 @@ import java.util.Date;
 
 @Entity
 @Table(name="rides")
-@SecondaryTable(name = "users", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
 public class RideEntity {
 
     @Id
@@ -25,6 +24,7 @@ public class RideEntity {
     @Column(name ="places")
     private Integer places;
 
+
     @Column(name = "id_driver")
     private Integer id_user;
 
@@ -36,13 +36,6 @@ public class RideEntity {
 
     @Column(name="city")
     private String city;
-
-    @Column(name = "firstname", table = "users")
-    private String fistname;
-
-    @Column(name = "lastname", table = "users")
-    private String lastname;
-
 
 
     public Integer getId() {
@@ -107,22 +100,6 @@ public class RideEntity {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public String getFistname() {
-        return fistname;
-    }
-
-    public void setFistname(String fistname) {
-        this.fistname = fistname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
     }
 
     public Date getDate() {

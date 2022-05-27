@@ -1,22 +1,29 @@
 package com.example.covoitonsapi.service;
 
-import com.example.covoitonsapi.dto.ReservationDto;
+import com.example.covoitonsapi.dto.BookingDto;
+import com.example.covoitonsapi.entity.RideEntity;
 import com.example.covoitonsapi.entity.RidesUsersEntity;
-import com.example.covoitonsapi.repository.ReservationRideRepository;
+import com.example.covoitonsapi.repository.BookingRepository;
+import com.example.covoitonsapi.repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReservationService implements IReservationService{
+public class BookingService implements IBookingService {
 
     @Autowired
-    private ReservationRideRepository repository;
+    private BookingRepository repository;
+    @Autowired
+    private RideRepository rideRepository;
 
     @Override
-    public Boolean reserved(ReservationDto dto) {
+    public Boolean reserved(BookingDto dto) {
 
         RidesUsersEntity entity = new RidesUsersEntity();
-        entity.setAccepted(false);
+        //RideEntity rideEntity = rideRepository.findById(entity.getId_ride()).get();
+        //rideEntity.setPlaces();
+
+        entity.setAccepted(null);
         entity.setId_ride(dto.getRide_id());
         entity.setId_user(dto.getUser_id());
 
@@ -26,7 +33,7 @@ public class ReservationService implements IReservationService{
     }
 
     @Override
-    public Boolean canceled(ReservationDto dto) {
+    public Boolean canceled(BookingDto dto) {
 
         RidesUsersEntity entity = new RidesUsersEntity();
         entity.setId(dto.getId());

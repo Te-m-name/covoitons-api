@@ -13,7 +13,7 @@ public class RidesUsersEntity {
     @Column(name="id")
     private Integer id;
 
-    @Column(name="id_user")
+    @Column(name="id_passenger")
     private Integer id_user;
 
     @Column(name="id_ride")

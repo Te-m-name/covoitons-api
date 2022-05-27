@@ -24,6 +24,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -47,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/user/add").permitAll();
         http.authorizeRequests().antMatchers("/user/current-user").permitAll();
         http.authorizeRequests().antMatchers(GET, "/ride/**").permitAll();
+        http.authorizeRequests().antMatchers(POST, "/booking/**").permitAll();
         http.authorizeRequests().antMatchers(GET, "/admin/**").hasAnyAuthority("admin");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
