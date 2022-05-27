@@ -6,10 +6,7 @@ import com.example.covoitonsapi.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,5 +34,27 @@ public class AdminController {
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PatchMapping(value = "updateIsAdmin")
+    public ResponseEntity<Boolean>updateIsAdmin(@RequestBody UserDto values){
+
+        System.out.println(values.getId());
+        System.out.println(values.getIs_admin());
+
+        values.setIs_admin(!values.getIs_admin());
+        System.out.println(values.getIs_admin());
+
+
+        if (adminService.exist(values.getId())){
+            try{
+                return new ResponseEntity(adminService.updateIsAdmin(values.getId(), values.getIs_admin()), HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        }else{
+            return new ResponseEntity("Utilisateur inconnu", HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

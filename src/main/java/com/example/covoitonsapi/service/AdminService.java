@@ -7,6 +7,8 @@ import com.example.covoitonsapi.entity.UserEntity;
 import com.example.covoitonsapi.repository.RideRepository;
 import com.example.covoitonsapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +48,23 @@ public class AdminService implements IAdminService{
     public List<RideDto> getAllRides() {
         List<RideEntity> liste = rideRepository.findAll();
         return liste.stream().map(e->rideToDto(e)).collect(Collectors.toList());
+    }
+
+    public Boolean exist(Integer id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    public Integer updateIsAdmin(Integer id, Boolean is_admin)throws Exception{
+        UserEntity entity = new UserEntity();
+        entity.setID(id);
+        entity.setIs_admin(is_admin);
+        try{
+            userRepository.updateIsAdmin(entity.getIs_admin(), entity.getID());
+        }catch(Exception e){
+            throw new Exception();
+        }
+        return 1;
     }
 
     public RideDto rideToDto(RideEntity entity){

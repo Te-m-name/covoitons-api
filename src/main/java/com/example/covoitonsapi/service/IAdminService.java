@@ -10,4 +10,6 @@ public interface IAdminService {
     List<UserDto> getAllUsers();
     UserDto toDto(UserEntity entity);
     List<RideDto> getAllRides();
+    Boolean exist(Integer id);
+    Integer updateIsAdmin(Integer id, Boolean is_admin)throws Exception;
 }
