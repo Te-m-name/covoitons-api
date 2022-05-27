@@ -29,9 +29,9 @@ public class UserController {
         if(!dto.getPassword().equals(dto.getConfirm_password())){
             return new ResponseEntity("Mot de passe incorrect", HttpStatus.BAD_REQUEST);
         }
-//        if(!dto.getEmail().endsWith("@ipipoe.com")){
-//            return new ResponseEntity("Merci d'utiliser votre email d'entreprise", HttpStatus.BAD_REQUEST);
-//        }
+        if(!dto.getEmail().endsWith("@yopmail.com")){
+            return new ResponseEntity("Merci d'utiliser votre email d'entreprise", HttpStatus.BAD_REQUEST);
+        }
 
         try{
             registrationService.register(dto);
