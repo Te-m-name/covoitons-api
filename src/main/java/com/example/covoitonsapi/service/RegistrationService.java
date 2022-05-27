@@ -16,7 +16,7 @@ public class RegistrationService implements IRegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final ConfirmationService confirmationService;
-    private final IEmailService emailSender;
+    private final EmailService emailSender;
 
 
     @Override

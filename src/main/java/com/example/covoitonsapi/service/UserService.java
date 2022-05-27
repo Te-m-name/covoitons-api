@@ -9,20 +9,14 @@ import com.example.covoitonsapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +29,8 @@ import java.util.UUID;
 @Slf4j
 public class UserService implements IUserService, UserDetailsService {
 
+    @Autowired
+    private EmployeeRepository employeeRepository;
     @Autowired
     private UserRepository repository;
     private final ConfirmationService confirmationService;
@@ -64,9 +60,6 @@ public class UserService implements IUserService, UserDetailsService {
         return new org.springframework.security.core.userdetails.User(email, user.getPassword(), authorities);
     }
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
     @Override
     public List<UserDto> getAllUser() {
         return null;
@@ -81,14 +74,15 @@ public class UserService implements IUserService, UserDetailsService {
             throw new IllegalStateException("Email déjà utilisé");
         }
 
-//        EmployeeEntity emp;
-//        try {
-//            emp = employeeRepository.findById(entity.getEmployee_code()).get();
-//        } catch (Exception e){
-//            throw new Exception ("code employé inconnu");
-//        }
+        EmployeeEntity emp;
+        try {
+            emp = employeeRepository.findById(entity.getEmployee_code()).get();
+        } catch (Exception e){
+            throw new Exception ("code employé inconnu");
+        }
 
-        repository.saveAndFlush(entity);
+        if(entity.getEmail().equals(emp.getEmail())){
+            repository.saveAndFlush(entity);
 
             String token = UUID.randomUUID().toString();
             ConfirmationEntity confirmationToken = new ConfirmationEntity(
@@ -100,23 +94,9 @@ public class UserService implements IUserService, UserDetailsService {
 
             confirmationService.saveConfirmationToken(confirmationToken);
             return token;
-
-//        if(entity.getEmail().equals(emp.getEmail())){
-//            repository.saveAndFlush(entity);
-//
-//            String token = UUID.randomUUID().toString();
-//            ConfirmationEntity confirmationToken = new ConfirmationEntity(
-//                    token,
-//                    LocalDateTime.now(),
-//                    LocalDateTime.now().plusMinutes(15),
-//                    entity
-//            );
-//
-//            confirmationService.saveConfirmationToken(confirmationToken);
-//            return token;
-//        } else {
-//            throw new Exception("Email / code employé incorrect");
-//        }
+        } else {
+            throw new Exception("Email / code employé incorrect");
+        }
     }
 
     public int enableUser(String email) {
