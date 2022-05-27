@@ -3,6 +3,7 @@ package com.example.covoitonsapi.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.covoitonsapi.dto.UserDto;
+import com.example.covoitonsapi.exception.UserServiceAuthenticationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,18 +36,21 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        UserDto credentials;
+        Authentication auth = null;
+
         try {
-            credentials = new ObjectMapper().readValue(request.getInputStream(), UserDto.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            UserDto credentials = new ObjectMapper().readValue(request.getInputStream(), UserDto.class);
+            String email = credentials.getEmail();
+            String password = credentials.getPassword();
+            log.info("Email is: {}", email);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+            auth = authenticationManager.authenticate(authenticationToken);
+        } catch (Exception e) {
+            log.error("error : " + e);
+            throw new UserServiceAuthenticationException(e.getMessage());
         }
 
-        String email = credentials.getEmail();
-        String password = credentials.getPassword();
-        log.info("Email is: {}", email);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
-        return authenticationManager.authenticate(authenticationToken);
+        return auth;
     }
 
     @Override
@@ -71,4 +75,5 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
+
 }

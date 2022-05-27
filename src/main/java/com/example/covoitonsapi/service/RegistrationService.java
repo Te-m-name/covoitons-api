@@ -33,7 +33,7 @@ public class RegistrationService implements IRegistrationService {
         entity.setEnabled(false);
 
         String token = userService.add(entity);
-        String link = "http://localhost:4200/user/confirm?token=" + token;
+        String link = "http://localhost:4200/confirm?token=" + token;
         emailSender.send(dto.getEmail(), buildEmail(dto.getFirstname(), link));
 
         return token;

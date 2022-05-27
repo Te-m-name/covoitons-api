@@ -9,6 +9,9 @@ import com.example.covoitonsapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +40,7 @@ public class UserService implements IUserService, UserDetailsService {
     private final ConfirmationService confirmationService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, IllegalStateException {
         UserEntity user = repository.findByEmail(email);
         if(user == null) {
             log.error("User not found in database");
@@ -44,6 +48,12 @@ public class UserService implements IUserService, UserDetailsService {
         } else {
             log.info("User found in database: {}", email);
         }
+
+        if(!user.getEnabled()) {
+            log.error("User not enabled");
+            throw new IllegalStateException("Veuillez confirmer votre compte");
+        }
+
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         if(user.getIs_admin() == true) {
             authorities.add(new SimpleGrantedAuthority("admin"));

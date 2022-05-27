@@ -24,7 +24,7 @@ public class UserController {
     private final RegistrationService registrationService;
 
     @PostMapping("add")
-    public ResponseEntity<String> add(@RequestBody UserDto dto) throws Exception{
+    public ResponseEntity<Boolean> add(@RequestBody UserDto dto) throws Exception{
 
         if(!dto.getPassword().equals(dto.getConfirm_password())){
             return new ResponseEntity("Mot de passe incorrect", HttpStatus.BAD_REQUEST);
@@ -34,8 +34,8 @@ public class UserController {
         }
 
         try{
-            String token = registrationService.register(dto);
-            return new ResponseEntity(token, HttpStatus.OK);
+            registrationService.register(dto);
+            return new ResponseEntity(true, HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
