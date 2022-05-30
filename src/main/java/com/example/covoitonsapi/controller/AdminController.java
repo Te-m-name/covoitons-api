@@ -63,7 +63,19 @@ public class AdminController {
         }else {
             return new ResponseEntity("Trajet inconnu", HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @PatchMapping(value = "updateEnabled")
+    public ResponseEntity<Boolean>updateEnabled(@RequestBody UserDto values){
 
+        if (adminService.exist(values.getId())){
+            try{
+                return new ResponseEntity(adminService.updateEnabled(values.getId(), values.getEnabled()), HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        }else{
+            return new ResponseEntity("Utilisateur inconnu", HttpStatus.BAD_REQUEST);
+        }
     }
 }
