@@ -79,7 +79,7 @@ public class AdminService implements IAdminService{
 
     public RideDto rideToDto(RideEntity entity){
 
-        UserEntity userEntity = userRepository.findById(entity.getId_user()).get();
+        UserEntity user = entity.getUserEntity();
 
         RideDto dto = new RideDto();
         dto.setStreet(entity.getStreet());
@@ -88,8 +88,8 @@ public class AdminService implements IAdminService{
         dto.setPost_code(entity.getPost_code());
         dto.setDeparture_date(entity.getDeparture_time());
         dto.setPlaces(entity.getPlaces());
-        dto.setDriverFirstname(userEntity.getFirstname());
-        dto.setDriverLastname(userEntity.getLastname());
+        dto.setDriverFirstname(user.getFirstname());
+        dto.setDriverLastname(user.getLastname());
         dto.setHome_to_office(entity.getHome_to_office());
         return dto;
     }
