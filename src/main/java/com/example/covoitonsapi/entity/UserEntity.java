@@ -31,6 +31,9 @@ public class UserEntity {
     @Column(name="is_admin")
     private Boolean is_admin;
 
+    @Column(name="enabled")
+    private Boolean enabled;
+
     @Column(name="created_at")
     private LocalDateTime created_at;
 
@@ -118,5 +121,14 @@ public class UserEntity {
 
     public void setDeleted_at(LocalDateTime deleted_at) {
         this.deleted_at = deleted_at;
+    }
+
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

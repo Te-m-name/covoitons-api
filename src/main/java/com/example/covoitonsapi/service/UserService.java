@@ -1,6 +1,7 @@
 package com.example.covoitonsapi.service;
 
 import com.example.covoitonsapi.dto.UserDto;
+import com.example.covoitonsapi.entity.ConfirmationEntity;
 import com.example.covoitonsapi.entity.EmployeeEntity;
 import com.example.covoitonsapi.entity.UserEntity;
 import com.example.covoitonsapi.repository.EmployeeRepository;
@@ -13,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +30,13 @@ import java.util.List;
 public class UserService implements IUserService, UserDetailsService {
 
     @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
     private UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
+    private final ConfirmationService confirmationService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, IllegalStateException {
         UserEntity user = repository.findByEmail(email);
         if(user == null) {
             log.error("User not found in database");
@@ -41,6 +44,12 @@ public class UserService implements IUserService, UserDetailsService {
         } else {
             log.info("User found in database: {}", email);
         }
+
+        if(!user.getEnabled()) {
+            log.error("User not enabled");
+            throw new IllegalStateException("Veuillez confirmer votre compte");
+        }
+
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         if(user.getIs_admin() == true) {
             authorities.add(new SimpleGrantedAuthority("admin"));
@@ -51,41 +60,47 @@ public class UserService implements IUserService, UserDetailsService {
         return new org.springframework.security.core.userdetails.User(email, user.getPassword(), authorities);
     }
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
     @Override
     public List<UserDto> getAllUser() {
         return null;
     }
 
     @Override
-    public Boolean add(UserDto dto) throws Exception {
+    public String add(UserEntity entity) throws Exception {
 
-        EmployeeEntity emp = new EmployeeEntity();
-        try{
-            emp= employeeRepository.findById(dto.getEmployee_code()).get();
-        }catch (Exception e){
+        Boolean userExists = repository.existsByEmail(entity.getEmail());
+
+        if (userExists) {
+            throw new IllegalStateException("Email déjà utilisé");
+        }
+
+        EmployeeEntity emp;
+        try {
+            emp = employeeRepository.findById(entity.getEmployee_code()).get();
+        } catch (Exception e){
             throw new Exception ("code employé inconnu");
         }
 
-        if(dto.getEmail().equals(emp.getEmail())){
-            UserEntity entity = new UserEntity();
-            entity.setFirstname(dto.getFirstname());
-            entity.setLastname(dto.getLastname());
-            entity.setEmail(dto.getEmail());
-            entity.setEmployee_code(dto.getEmployee_code());
-            entity.setPassword(passwordEncoder.encode(dto.getPassword()));
-            entity.setUpdated_at(LocalDateTime.now());
-            entity.setCreated_at(LocalDateTime.now());
-            entity.setIs_admin(false);
-
+        if(entity.getEmail().equals(emp.getEmail())){
             repository.saveAndFlush(entity);
 
-            return true;
-        } else{
+            String token = UUID.randomUUID().toString();
+            ConfirmationEntity confirmationToken = new ConfirmationEntity(
+                    token,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().plusMinutes(60),
+                    entity
+            );
+
+            confirmationService.saveConfirmationToken(confirmationToken);
+            return token;
+        } else {
             throw new Exception("Email / code employé incorrect");
         }
+    }
+
+    public int enableUser(String email) {
+        return repository.enableUser(email);
     }
 
     @Override
