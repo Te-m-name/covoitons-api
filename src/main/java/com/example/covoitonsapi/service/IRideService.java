@@ -17,8 +17,8 @@ public interface IRideService {
     Integer add(RideDto dto);
     List<RideDto> getAllRides();
     List<RideDto> getBookedRides(Integer id);
-    List<RideDto> getProposedRides(Integer id);
-    RideDto getNextRide(Integer id);
+    List<RideDto> getProposedRides(Integer id);RideDto getNextRide(Integer id);
+
     List<RideDto> getRideByCity(String city, Boolean home_to_office, LocalDate date);
     List<RideDto> getLast5Rides();
 

@@ -86,6 +86,7 @@ public class RideController {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("bookedRides/{id}")
     public ResponseEntity<List<RideDto>> getBookedRides(@PathVariable Integer id) {
         try {
@@ -94,6 +95,7 @@ public class RideController {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("proposedRides/{id}")
     public ResponseEntity<List<RideDto>> getProposedRides(@PathVariable Integer id) {
         try {
