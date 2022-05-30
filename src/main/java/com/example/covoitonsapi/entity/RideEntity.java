@@ -5,7 +5,6 @@ import java.util.Date;
 
 @Entity
 @Table(name="rides")
-@SecondaryTable(name = "users", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
 public class RideEntity {
 
     @Id
@@ -25,8 +24,9 @@ public class RideEntity {
     @Column(name ="places")
     private Integer places;
 
-    @Column(name = "id_driver")
-    private Integer id_user;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_driver")
+    private UserEntity userEntity;
 
     @Column(name="street")
     private String street;
@@ -36,14 +36,6 @@ public class RideEntity {
 
     @Column(name="city")
     private String city;
-
-    @Column(name = "firstname", table = "users")
-    private String fistname;
-
-    @Column(name = "lastname", table = "users")
-    private String lastname;
-
-
 
     public Integer getId() {
         return id;
@@ -77,14 +69,6 @@ public class RideEntity {
         this.places = places;
     }
 
-    public Integer getId_user() {
-        return id_user;
-    }
-
-    public void setId_user(Integer id_user) {
-        this.id_user = id_user;
-    }
-
     public String getStreet() {
         return street;
     }
@@ -109,27 +93,19 @@ public class RideEntity {
         this.city = city;
     }
 
-    public String getFistname() {
-        return fistname;
-    }
-
-    public void setFistname(String fistname) {
-        this.fistname = fistname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
     public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }
