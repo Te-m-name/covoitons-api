@@ -58,7 +58,6 @@ public class RideController {
 
     @PostMapping("add")
     public ResponseEntity<Integer> add(@RequestBody RideDto dto){
-
         Date today = new Date();
         int test_date = dto.getDate().compareTo(today);
 
