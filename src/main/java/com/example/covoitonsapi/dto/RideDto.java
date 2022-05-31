@@ -1,5 +1,9 @@
 package com.example.covoitonsapi.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Date;
 
 public class RideDto {
@@ -11,6 +15,7 @@ public class RideDto {
     private String departure;
     private String arrival;
     private Date departure_date;
+    private LocalTime arrival_time;
     private Date date;
     private Boolean home_to_office;
     private Integer places;
@@ -26,6 +31,14 @@ public class RideDto {
 
     public void setDriverFirstname(String driverFirstname) {
         this.driverFirstname = driverFirstname;
+    }
+
+    public LocalTime getArrival_time() {
+        return arrival_time;
+    }
+
+    public void setArrival_time(LocalTime arrival_time) {
+        this.arrival_time = arrival_time;
     }
 
     public String getDriverLastname() {
