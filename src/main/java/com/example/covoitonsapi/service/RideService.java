@@ -112,7 +112,7 @@ public class RideService implements IRideService {
         return toDto(nextRide);
     }
     public List<RideDto> getLast5Rides() {
-        List<RideEntity> lastRides = rideRepository.findTop5ByOrderByIdDesc();
+        List<RideEntity> lastRides = rideRepository.findTop4ByOrderByIdDesc();
         return lastRides.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 }

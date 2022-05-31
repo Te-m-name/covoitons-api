@@ -25,5 +25,5 @@ public interface RideRepository extends JpaRepository<RideEntity, Integer> {
     List<RideEntity> bookedRides(Integer id);
     @Query(value = "select distinct * from rides where rides.id_driver = ?1 order by departure_time", nativeQuery = true)
     List<RideEntity> proposedRides(Integer id);
-    List<RideEntity> findTop5ByOrderByIdDesc();
+    List<RideEntity> findTop4ByOrderByIdDesc();
 }
