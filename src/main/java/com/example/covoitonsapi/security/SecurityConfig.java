@@ -2,26 +2,24 @@ package com.example.covoitonsapi.security;
 
 import com.example.covoitonsapi.filter.CustomAuthenticationFilter;
 import com.example.covoitonsapi.filter.CustomAuthorizationFilter;
+import com.example.covoitonsapi.util.ResponseWriteUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+
+import java.nio.charset.StandardCharsets;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -31,6 +29,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -47,21 +46,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/login").permitAll();
         http.authorizeRequests().antMatchers("/user/add").permitAll();
+        http.authorizeRequests().antMatchers("/user/confirm").permitAll();
         http.authorizeRequests().antMatchers("/user/current-user").permitAll();
         http.authorizeRequests().antMatchers(GET, "/ride/**").permitAll();
         http.authorizeRequests().antMatchers( "/booking/**").permitAll();
         http.authorizeRequests().antMatchers(GET, "/admin/**").hasAnyAuthority("admin");
         http.authorizeRequests().antMatchers(PATCH, "/admin/**").hasAnyAuthority("admin");
+        http.authorizeRequests().antMatchers(DELETE, "/admin/**").hasAnyAuthority("admin");
         http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
+        http.addFilter(customAuthenticationFilter());
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    private AuthenticationFailureHandler authenticationFailureHandler() {
+        return (request, response, ex) -> {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType(MediaType.APPLICATION_JSON.toString());
+            response.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
+            ResponseWriteUtil.writeErrorResponse(response, ex.getMessage());
+        };
     }
 
+    private CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
+        CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManager());
+        filter.setAuthenticationFailureHandler(authenticationFailureHandler());
+
+        return filter;
+    }
 
 }

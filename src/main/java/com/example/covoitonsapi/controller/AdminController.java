@@ -39,13 +39,6 @@ public class AdminController {
     @PatchMapping(value = "updateIsAdmin")
     public ResponseEntity<Boolean>updateIsAdmin(@RequestBody UserDto values){
 
-        System.out.println(values.getId());
-        System.out.println(values.getIs_admin());
-
-        values.setIs_admin(!values.getIs_admin());
-        System.out.println(values.getIs_admin());
-
-
         if (adminService.exist(values.getId())){
             try{
                 return new ResponseEntity(adminService.updateIsAdmin(values.getId(), values.getIs_admin()), HttpStatus.OK);
@@ -55,6 +48,22 @@ public class AdminController {
         }else{
             return new ResponseEntity("Utilisateur inconnu", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @DeleteMapping(value = "deleteRide/{id}")
+    public ResponseEntity<Boolean> deleteRide(@PathVariable Integer id){
+
+        if(adminService.rideExist(id)){
+            try{
+                adminService.deleteRide(id);
+                return new ResponseEntity(true, HttpStatus.OK);
+            }catch (Exception e){
+                return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        }else {
+            return new ResponseEntity("Trajet inconnu", HttpStatus.BAD_REQUEST);
+        }
+
 
     }
 }

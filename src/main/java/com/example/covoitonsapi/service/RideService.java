@@ -33,16 +33,18 @@ public class RideService implements IRideService {
 
         RideDto dto = new RideDto();
 
+        UserEntity user = entity.getUserEntity();
+
         dto.setDate(entity.getDeparture_time());
         dto.setPlaces(entity.getPlaces());
         dto.setStreet(entity.getStreet());
         dto.setPost_code(entity.getPost_code());
         dto.setCity(entity.getCity());
         dto.setHome_to_office(entity.getHome_to_office());
-        dto.setId_user(entity.getUserEntity().getID());
+        dto.setId_user(user.getID());
         dto.setId_ride(entity.getId());
-        dto.setDriverFirstname(entity.getUserEntity().getFirstname());
-        dto.setDriverLastname(entity.getUserEntity().getLastname());
+        dto.setDriverFirstname(user.getFirstname());
+        dto.setDriverLastname(user.getLastname());
 
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());

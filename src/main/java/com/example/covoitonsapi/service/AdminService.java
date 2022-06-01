@@ -67,14 +67,33 @@ public class AdminService implements IAdminService{
         return 1;
     }
 
+    @Override
+    public Boolean rideExist(Integer id) {
+        return rideRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteRide(Integer id) {
+        rideRepository.deleteById(id);
+    }
+
     public RideDto rideToDto(RideEntity entity){
+
+        UserEntity user = entity.getUserEntity();
+
         RideDto dto = new RideDto();
         dto.setStreet(entity.getStreet());
         dto.setCity(entity.getCity());
         dto.setId_ride(entity.getId());
         dto.setPost_code(entity.getPost_code());
+        dto.setDeparture_date(entity.getDeparture_time());
+        dto.setPlaces(entity.getPlaces());
+        dto.setDriverFirstname(user.getFirstname());
+        dto.setDriverLastname(user.getLastname());
+        dto.setHome_to_office(entity.getHome_to_office());
         return dto;
     }
+
 
 
 }

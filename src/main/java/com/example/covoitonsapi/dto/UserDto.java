@@ -9,6 +9,7 @@ public class UserDto {
     private Boolean is_admin;
     private String password;
     private String confirm_password;
+    private Boolean enabled;
 
     public Integer getId() {
         return id;
@@ -72,5 +73,13 @@ public class UserDto {
 
     public void setConfirm_password(String confirm_password) {
         this.confirm_password = confirm_password;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

@@ -23,9 +23,10 @@ public class RideEntity {
 
     @Column(name ="places")
     private Integer places;
-    /*
-    @Column(name = "id_driver")
-    private Integer id_user;*/
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_driver")
+    private UserEntity userEntity;
 
     @Column(name="street")
     private String street;
@@ -35,19 +36,6 @@ public class RideEntity {
 
     @Column(name="city")
     private String city;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_driver")
-    private UserEntity userEntity;
-
-
-    public UserEntity getUserEntity() {
-        return userEntity;
-    }
-
-    public void setUserEntity(UserEntity userEntity) {
-        this.userEntity = userEntity;
-    }
 
     public Integer getId() {
         return id;
@@ -80,15 +68,7 @@ public class RideEntity {
     public void setPlaces(Integer places) {
         this.places = places;
     }
-    /*
-    public Integer getId_user() {
-        return id_user;
-    }
 
-    public void setId_user(Integer id_user) {
-        this.id_user = id_user;
-    }
-    */
     public String getStreet() {
         return street;
     }
@@ -119,5 +99,13 @@ public class RideEntity {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }
