@@ -1,6 +1,10 @@
 package com.example.covoitonsapi.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
@@ -37,12 +41,23 @@ public class RideEntity {
     @Column(name="city")
     private String city;
 
+    @Column(name="arrival_time")
+    private LocalTime arrivalTime;
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public LocalTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 
     public Date getDeparture_time() {

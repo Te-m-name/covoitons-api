@@ -41,6 +41,7 @@ public class AdminService implements IAdminService{
         dto.setEmail(entity.getEmail());
         dto.setIs_admin(entity.getIs_admin());
         dto.setEmployee_code(entity.getEmployee_code());
+        dto.setEnabled(entity.getEnabled());
         return dto;
     }
 
@@ -94,6 +95,16 @@ public class AdminService implements IAdminService{
         return dto;
     }
 
-
-
+    @Override
+    public Integer updateEnabled(Integer id, Boolean enabled)throws Exception{
+        UserEntity entity = new UserEntity();
+        entity.setID(id);
+        entity.setEnabled(enabled);
+        try{
+            userRepository.updateEnabled(entity.getEnabled(), entity.getID());
+        }catch(Exception e){
+            throw new Exception();
+        }
+        return 1;
+    }
 }
