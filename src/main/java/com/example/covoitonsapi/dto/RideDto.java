@@ -24,8 +24,8 @@ public class RideDto {
         return driverFirstname;
     }
 
-    public void setDriverFirstname(String driverFistname) {
-        this.driverFirstname = driverFistname;
+    public void setDriverFirstname(String driverFirstname) {
+        this.driverFirstname = driverFirstname;
     }
 
     public String getDriverLastname() {
