@@ -32,19 +32,19 @@ public class RideService implements IRideService {
     public RideDto toDto(RideEntity entity) {
 
         RideDto dto = new RideDto();
-
-        UserEntity userEntity = userRepository.findById(entity.getId_user()).get();
+        UserEntity user = entity.getUserEntity();
 
         dto.setDate(entity.getDeparture_time());
+        dto.setArrival_time(entity.getArrivalTime());
         dto.setPlaces(entity.getPlaces());
         dto.setStreet(entity.getStreet());
         dto.setPost_code(entity.getPost_code());
         dto.setCity(entity.getCity());
         dto.setHome_to_office(entity.getHome_to_office());
-        dto.setId_user(entity.getId_user());
+        dto.setId_user(user.getID());
         dto.setId_ride(entity.getId());
-        dto.setDriverFirstname(userEntity.getFirstname());
-        dto.setDriverLastname(userEntity.getLastname());
+        dto.setDriverFirstname(user.getFirstname());
+        dto.setDriverLastname(user.getLastname());
 
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
@@ -72,9 +72,10 @@ public class RideService implements IRideService {
         entity.setStreet(dto.getStreet());
         entity.setPost_code(dto.getPost_code());
         entity.setDeparture_time(dto.getDate());
+        entity.setArrivalTime(dto.getArrival_time());
         entity.setHome_to_office(dto.getHome_to_office());
         entity.setPlaces(dto.getPlaces());
-        entity.setId_user(currentUser.getID());
+        entity.setUserEntity(currentUser);
         entity.setDate(dto.getDeparture_date());
 
         entity = rideRepository.saveAndFlush(entity);
@@ -111,7 +112,7 @@ public class RideService implements IRideService {
         return toDto(nextRide);
     }
     public List<RideDto> getLast5Rides() {
-        List<RideEntity> lastRides = rideRepository.findTop5ByOrderByIdDesc();
+        List<RideEntity> lastRides = rideRepository.findTop4ByOrderByIdDesc();
         return lastRides.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 }

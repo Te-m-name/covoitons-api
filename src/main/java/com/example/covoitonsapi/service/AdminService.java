@@ -41,6 +41,7 @@ public class AdminService implements IAdminService{
         dto.setEmail(entity.getEmail());
         dto.setIs_admin(entity.getIs_admin());
         dto.setEmployee_code(entity.getEmployee_code());
+        dto.setEnabled(entity.getEnabled());
         return dto;
     }
 
@@ -67,14 +68,43 @@ public class AdminService implements IAdminService{
         return 1;
     }
 
+    @Override
+    public Boolean rideExist(Integer id) {
+        return rideRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteRide(Integer id) {
+        rideRepository.deleteById(id);
+    }
+
     public RideDto rideToDto(RideEntity entity){
+
+        UserEntity user = entity.getUserEntity();
+
         RideDto dto = new RideDto();
         dto.setStreet(entity.getStreet());
         dto.setCity(entity.getCity());
         dto.setId_ride(entity.getId());
         dto.setPost_code(entity.getPost_code());
+        dto.setDeparture_date(entity.getDeparture_time());
+        dto.setPlaces(entity.getPlaces());
+        dto.setDriverFirstname(user.getFirstname());
+        dto.setDriverLastname(user.getLastname());
+        dto.setHome_to_office(entity.getHome_to_office());
         return dto;
     }
 
-
+    @Override
+    public Integer updateEnabled(Integer id, Boolean enabled)throws Exception{
+        UserEntity entity = new UserEntity();
+        entity.setID(id);
+        entity.setEnabled(enabled);
+        try{
+            userRepository.updateEnabled(entity.getEnabled(), entity.getID());
+        }catch(Exception e){
+            throw new Exception();
+        }
+        return 1;
+    }
 }

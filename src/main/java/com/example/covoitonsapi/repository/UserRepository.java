@@ -24,4 +24,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Query("UPDATE UserEntity u SET u.is_admin=?1 WHERE u.ID=?2")
     void updateIsAdmin(Boolean is_admin, Integer id);
 
+    /*
+    @Modifying
+    @Query(value = "UPDATE users SET is_admin= :is_admin WHERE id= :id", nativeQuery = true)
+    Integer updateIsAdmin(@Param("is_admin") Byte is_admin,@Param("id")  Integer id);
+ */
+    @Transactional
+    @Modifying
+    @Query("UPDATE UserEntity u SET u.enabled=?1 WHERE u.ID=?2")
+    void updateEnabled(Boolean enabled, Integer id);
 }

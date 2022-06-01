@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET, "/ride/**").permitAll();
         http.authorizeRequests().antMatchers(GET, "/admin/**").hasAnyAuthority("admin");
         http.authorizeRequests().antMatchers(PATCH, "/admin/**").hasAnyAuthority("admin");
+        http.authorizeRequests().antMatchers(DELETE, "/admin/**").hasAnyAuthority("admin");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter());
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

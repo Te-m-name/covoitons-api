@@ -12,4 +12,7 @@ public interface IAdminService {
     List<RideDto> getAllRides();
     Boolean exist(Integer id);
     Integer updateIsAdmin(Integer id, Boolean is_admin)throws Exception;
+    Boolean rideExist(Integer id);
+    void deleteRide(Integer id);
+    Integer updateEnabled(Integer id, Boolean enabled)throws Exception;
 }
