@@ -1,14 +1,20 @@
 package com.example.covoitonsapi.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.covoitonsapi.dto.UserDto;
 import com.example.covoitonsapi.entity.ConfirmationEntity;
 import com.example.covoitonsapi.entity.EmployeeEntity;
 import com.example.covoitonsapi.entity.UserEntity;
 import com.example.covoitonsapi.repository.EmployeeRepository;
 import com.example.covoitonsapi.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,12 +22,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Service
 @RequiredArgsConstructor
@@ -104,6 +113,11 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
+    public UserEntity getUser(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
     public UserDto getCurrentUser() {
         UserEntity currentUser = repository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         UserDto dto = new UserDto();
@@ -116,5 +130,35 @@ public class UserService implements IUserService, UserDetailsService {
         return dto;
     }
 
+    @Override
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response, String authorizationHeader) throws IOException {
+        String refresh_token = authorizationHeader.substring("Bearer ".length());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(refresh_token);
+        String email = decodedJWT.getSubject();
+        UserEntity user = this.getUser(email);
+
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        if(user.getIs_admin() == true) {
+            authorities.add(new SimpleGrantedAuthority("admin"));
+        } else {
+            authorities.add(new SimpleGrantedAuthority("user"));
+        }
+
+        String access_token = JWT.create()
+                .withSubject(user.getEmail())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withIssuer(request.getRequestURL().toString())
+                .withClaim("roles", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);
+
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token", access_token);
+        tokens.put("refresh_token", refresh_token);
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+    }
 
 }
