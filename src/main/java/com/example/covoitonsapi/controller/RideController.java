@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "https://covoitons-client.vercel.app"})
 @RestController
 @RequestMapping("ride")
 @Slf4j
