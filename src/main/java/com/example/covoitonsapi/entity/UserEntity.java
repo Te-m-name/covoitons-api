@@ -48,7 +48,7 @@ public class UserEntity {
     private List<RideEntity> rideEntityList;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_passenger", referencedColumnName = "id")
+    @JoinColumn(name="id_user", referencedColumnName = "id")
     private List<RidesUsersEntity> ridesUsersEntityList;
 
 
