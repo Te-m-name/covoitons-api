@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="rides")
@@ -43,6 +44,10 @@ public class RideEntity {
 
     @Column(name="arrival_time")
     private LocalTime arrivalTime;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_drive", referencedColumnName = "id")
+    private List<RidesUsersEntity> ridesUsersEntityList;
 
     public Integer getId() {
         return id;
@@ -122,5 +127,13 @@ public class RideEntity {
 
     public void setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
+    }
+
+    public List<RidesUsersEntity> getRidesUsersEntityList() {
+        return ridesUsersEntityList;
+    }
+
+    public void setRidesUsersEntityList(List<RidesUsersEntity> ridesUsersEntityList) {
+        this.ridesUsersEntityList = ridesUsersEntityList;
     }
 }

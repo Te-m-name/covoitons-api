@@ -47,6 +47,18 @@ public class UserEntity {
     @JoinColumn(name="id_driver", referencedColumnName = "id")
     private List<RideEntity> rideEntityList;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_passenger", referencedColumnName = "id")
+    private List<RidesUsersEntity> ridesUsersEntityList;
+
+
+    public List<RidesUsersEntity> getRidesUsersEntityList() {
+        return ridesUsersEntityList;
+    }
+
+    public void setRidesUsersEntityList(List<RidesUsersEntity> ridesUsersEntityList) {
+        this.ridesUsersEntityList = ridesUsersEntityList;
+    }
 
     public List<RideEntity> getRideEntityList() {
         return rideEntityList;

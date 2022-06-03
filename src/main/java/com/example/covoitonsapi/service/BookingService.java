@@ -33,15 +33,15 @@ public class BookingService implements IBookingService {
 
         BookingDto dto = new BookingDto();
 
-        dto.setId(entity.getId_ride());
-        dto.setRide_id(entity.getId_ride());
-        dto.setUser_id(entity.getId_user());
+        dto.setId(entity.getId());
+        dto.setRide_id(entity.getRide().getId());
+        dto.setUser_id(entity.getUser().getID());
 
         return dto;
     }
 
     @Override
-    public Boolean book(BookingDto dto) {
+    public Integer book(BookingDto dto) {
 
         RidesUsersEntity entity = new RidesUsersEntity();
         //diminuer le nombre de place disponibles
@@ -50,12 +50,16 @@ public class BookingService implements IBookingService {
         //rideEntity.setPlaces();
 
         entity.setAccepted(null);
-        entity.setId_ride(dto.getRide_id());
-        entity.setId_user(dto.getUser_id());
+
+        RideEntity rideEntity = rideRepository.findById(dto.getRide_id()).get();
+        entity.setRide(rideEntity);
+
+        UserEntity userEntity = userRepository.findById(dto.getUser_id()).get();
+        entity.setUser(userEntity);
 
         bookingRepository.saveAndFlush(entity);
 
-        return true;
+        return entity.getId();
     }
 
     @Override
@@ -68,13 +72,13 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public Boolean acceptBooking(Integer id) {
+    public Integer acceptBooking(Integer id) {
 
         UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         RidesUsersEntity entity = bookingRepository.findById(id).get();
 
-        RideEntity rideEntity = rideRepository.findById(entity.getId_ride()).get();
+        RideEntity rideEntity = rideRepository.findById(entity.getRide().getId()).get();
 
         Integer idDriver = rideEntity.getUserEntity().getID();
 
@@ -84,13 +88,13 @@ public class BookingService implements IBookingService {
         entity.setAccepted(true);
         bookingRepository.saveAndFlush(entity);
 
-        return true;
+        return entity.getId();
     }
 
     @Override
-    public Boolean declineBooking(Integer id) {
+    public Integer declineBooking(Integer id) {
 
-        return true;
+        return null;
     }
 
     @Override

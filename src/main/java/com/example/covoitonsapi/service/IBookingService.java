@@ -12,13 +12,13 @@ public interface IBookingService {
 
     BookingDto toDto(RidesUsersEntity entity);
 
-    Boolean book(BookingDto dto);
+    Integer book(BookingDto dto);
 
     Boolean canceleBooking(Integer id);
 
-    Boolean acceptBooking(Integer id);
+    Integer acceptBooking(Integer id);
 
-    Boolean declineBooking(Integer id);
+    Integer declineBooking(Integer id);
 
     List<BookingDto> getBookingOnMyRide(Integer id);
 
