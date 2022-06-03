@@ -45,13 +45,11 @@ public class RideController {
 
         Integer ID = Integer.parseInt(id);
 
-        RideDto dto = rideService.getNextRide(ID);
-
         try {
+            RideDto dto = rideService.getNextRide(ID);
             return new ResponseEntity(dto, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity("Aucun trajet réservé", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
