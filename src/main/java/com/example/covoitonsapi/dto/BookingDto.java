@@ -1,10 +1,14 @@
 package com.example.covoitonsapi.dto;
 
-public class ReservationDto {
+public class BookingDto {
 
     private Integer id;
     private Integer user_id;
     private Integer ride_id;
+
+
+
+
 
     public Integer getId() {
         return id;
