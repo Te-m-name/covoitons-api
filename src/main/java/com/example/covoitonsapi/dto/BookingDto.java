@@ -6,6 +6,10 @@ public class BookingDto {
     private Integer user_id;
     private Integer ride_id;
 
+
+
+
+
     public Integer getId() {
         return id;
     }

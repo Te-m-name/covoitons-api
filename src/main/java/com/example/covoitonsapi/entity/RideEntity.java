@@ -41,7 +41,7 @@ public class RideEntity {
 
     @Column(name="city")
     private String city;
-
+    
     @Column(name="arrival_time")
     private LocalTime arrivalTime;
 
