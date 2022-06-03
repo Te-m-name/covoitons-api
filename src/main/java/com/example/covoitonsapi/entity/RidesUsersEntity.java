@@ -14,7 +14,7 @@ public class RidesUsersEntity {
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_passenger")
+    @JoinColumn(name="id_user")
     private UserEntity user;
 
     @OneToOne(fetch = FetchType.LAZY)
