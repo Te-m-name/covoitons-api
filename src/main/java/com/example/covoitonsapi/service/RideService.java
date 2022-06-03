@@ -32,6 +32,7 @@ public class RideService implements IRideService {
     public RideDto toDto(RideEntity entity) {
 
         RideDto dto = new RideDto();
+
         UserEntity user = entity.getUserEntity();
 
         dto.setDate(entity.getDeparture_time());
