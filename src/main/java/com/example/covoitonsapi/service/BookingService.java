@@ -54,6 +54,9 @@ public class BookingService implements IBookingService {
         entity.setAccepted(null);
 
         RideEntity rideEntity = rideRepository.findById(dto.getRide_id()).get();
+
+        if (rideEntity.getPlaces() == 0)
+
         entity.setRide(rideEntity);
         places = rideEntity.getPlaces()-1;
         rideEntity.setPlaces(places);
