@@ -7,8 +7,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.covoitonsapi.dto.UserDto;
 import com.example.covoitonsapi.entity.ConfirmationEntity;
 import com.example.covoitonsapi.entity.EmployeeEntity;
+import com.example.covoitonsapi.entity.ImageEntity;
 import com.example.covoitonsapi.entity.UserEntity;
 import com.example.covoitonsapi.repository.EmployeeRepository;
+import com.example.covoitonsapi.repository.ImageRepository;
 import com.example.covoitonsapi.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +23,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -42,6 +49,7 @@ public class UserService implements IUserService, UserDetailsService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private UserRepository repository;
+
     private final ConfirmationService confirmationService;
 
     @Override
