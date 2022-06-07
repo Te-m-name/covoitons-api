@@ -111,6 +111,16 @@ public class UserController {
 
     @PostMapping("/upload")
     public ResponseEntity uploadImage(@RequestParam("imageFile") MultipartFile file) {
+        Integer id = service.getCurrentUser().getId();
+        if (service.ImgExist(id)) {
+            try {
+                Integer img = service.updateImageProfile(file);
+                return new ResponseEntity(null, HttpStatus.OK);
+            } catch(Exception e) {
+                return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        }
+
         try {
             ImageEntity img = service.uploadImageProfile(file);
             return new ResponseEntity(null, HttpStatus.OK);

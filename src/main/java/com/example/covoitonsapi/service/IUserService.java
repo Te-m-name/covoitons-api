@@ -29,4 +29,8 @@ public interface IUserService {
 
     ImageEntity getImage(Integer userId) throws IOException;
 
+    public Boolean ImgExist(Integer id);
+
+    Integer updateImageProfile(MultipartFile file) throws IOException;
+
 }

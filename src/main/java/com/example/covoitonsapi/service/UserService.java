@@ -192,6 +192,20 @@ public class UserService implements IUserService, UserDetailsService {
         return img;
     }
 
+    @Override
+    public Boolean ImgExist(Integer id) {
+        return imageRepository.existsByUserId(id);
+    }
+
+    @Override
+    public Integer updateImageProfile(MultipartFile file) throws IOException {
+        UserDto currentUser = getCurrentUser();
+
+        System.out.println("Original Image Byte Size - " + file.getBytes().length);
+        return imageRepository.updateImageProfile(file.getOriginalFilename(), file.getContentType(),
+                compressBytes(file.getBytes()), currentUser.getId());
+    }
+
     public static byte[] compressBytes(byte[] data) {
         Deflater deflater = new Deflater();
         deflater.setInput(data);
