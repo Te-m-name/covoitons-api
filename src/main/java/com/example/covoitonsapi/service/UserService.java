@@ -50,8 +50,6 @@ public class UserService implements IUserService, UserDetailsService {
     @Autowired
     private UserRepository repository;
 
-    @Autowired
-    ImageRepository imageRepository;
     private final ConfirmationService confirmationService;
 
     @Override
@@ -169,78 +167,6 @@ public class UserService implements IUserService, UserDetailsService {
         tokens.put("refresh_token", refresh_token);
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-    }
-
-    @Override
-    public ImageEntity uploadImageProfile(MultipartFile file) throws IOException {
-        UserDto currentUser = getCurrentUser();
-
-        System.out.println("Original Image Byte Size - " + file.getBytes().length);
-        ImageEntity img = new ImageEntity(file.getOriginalFilename(), file.getContentType(),
-                compressBytes(file.getBytes()), currentUser.getId());
-        imageRepository.save(img);
-        return img;
-    }
-
-    @Override
-    public ImageEntity getImage(Integer userId) throws IOException {
-        UserDto currentUser = getCurrentUser();
-
-        final Optional<ImageEntity> retrievedImage = imageRepository.findByUserId(currentUser.getId());
-        ImageEntity img = new ImageEntity(retrievedImage.get().getName(), retrievedImage.get().getType(),
-                decompressBytes(retrievedImage.get().getPicByte()), retrievedImage.get().getUserId());
-        return img;
-    }
-
-    @Override
-    public Boolean ImgExist(Integer id) {
-        return imageRepository.existsByUserId(id);
-    }
-
-    @Override
-    public Integer updateImageProfile(MultipartFile file) throws IOException {
-        UserDto currentUser = getCurrentUser();
-
-        System.out.println("Original Image Byte Size - " + file.getBytes().length);
-        return imageRepository.updateImageProfile(file.getOriginalFilename(), file.getContentType(),
-                compressBytes(file.getBytes()), currentUser.getId());
-    }
-
-    public static byte[] compressBytes(byte[] data) {
-        Deflater deflater = new Deflater();
-        deflater.setInput(data);
-        deflater.finish();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer);
-            outputStream.write(buffer, 0, count);
-        }
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-        }
-        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
-
-        return outputStream.toByteArray();
-    }
-
-    public static byte[] decompressBytes(byte[] data) {
-        Inflater inflater = new Inflater();
-        inflater.setInput(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
-        try {
-            while (!inflater.finished()) {
-                int count = inflater.inflate(buffer);
-                outputStream.write(buffer, 0, count);
-            }
-            outputStream.close();
-        } catch (IOException ioe) {
-        } catch (DataFormatException e) {
-        }
-        return outputStream.toByteArray();
     }
 
 }

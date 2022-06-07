@@ -24,13 +24,4 @@ public interface IUserService {
     UserEntity getUser(String email);
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response, String authorizationHeader) throws IOException;
-
-    ImageEntity uploadImageProfile(MultipartFile file) throws IOException;
-
-    ImageEntity getImage(Integer userId) throws IOException;
-
-    public Boolean ImgExist(Integer id);
-
-    Integer updateImageProfile(MultipartFile file) throws IOException;
-
 }
