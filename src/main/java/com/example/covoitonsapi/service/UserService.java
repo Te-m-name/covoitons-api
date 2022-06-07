@@ -7,8 +7,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.covoitonsapi.dto.UserDto;
 import com.example.covoitonsapi.entity.ConfirmationEntity;
 import com.example.covoitonsapi.entity.EmployeeEntity;
+import com.example.covoitonsapi.entity.ImageEntity;
 import com.example.covoitonsapi.entity.UserEntity;
 import com.example.covoitonsapi.repository.EmployeeRepository;
+import com.example.covoitonsapi.repository.ImageRepository;
 import com.example.covoitonsapi.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +23,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -42,6 +49,9 @@ public class UserService implements IUserService, UserDetailsService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    ImageRepository imageRepository;
     private final ConfirmationService confirmationService;
 
     @Override
@@ -159,6 +169,64 @@ public class UserService implements IUserService, UserDetailsService {
         tokens.put("refresh_token", refresh_token);
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+    }
+
+    @Override
+    public ImageEntity uploadImageProfile(MultipartFile file) throws IOException {
+        UserDto currentUser = getCurrentUser();
+
+        System.out.println("Original Image Byte Size - " + file.getBytes().length);
+        ImageEntity img = new ImageEntity(file.getOriginalFilename(), file.getContentType(),
+                compressBytes(file.getBytes()), currentUser.getId());
+        imageRepository.save(img);
+        return img;
+    }
+
+    @Override
+    public ImageEntity getImage(Integer userId) throws IOException {
+        UserDto currentUser = getCurrentUser();
+
+        final Optional<ImageEntity> retrievedImage = imageRepository.findByUserId(currentUser.getId());
+        ImageEntity img = new ImageEntity(retrievedImage.get().getName(), retrievedImage.get().getType(),
+                decompressBytes(retrievedImage.get().getPicByte()), retrievedImage.get().getUserId());
+        return img;
+    }
+
+    public static byte[] compressBytes(byte[] data) {
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        deflater.finish();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+        }
+        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+
+        return outputStream.toByteArray();
+    }
+
+    public static byte[] decompressBytes(byte[] data) {
+        Inflater inflater = new Inflater();
+        inflater.setInput(data);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        try {
+            while (!inflater.finished()) {
+                int count = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, count);
+            }
+            outputStream.close();
+        } catch (IOException ioe) {
+        } catch (DataFormatException e) {
+        }
+        return outputStream.toByteArray();
     }
 
 }

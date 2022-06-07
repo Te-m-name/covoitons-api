@@ -48,9 +48,6 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    @Autowired
-    ImageRepository imageRepository;
-
     private final RegistrationService registrationService;
 
     @PostMapping("add")
@@ -113,60 +110,24 @@ public class UserController {
     }
 
     @PostMapping("/upload")
-    public BodyBuilder uplaodImage(@RequestParam("imageFile") MultipartFile file) throws IOException {
-
-        System.out.println("Original Image Byte Size - " + file.getBytes().length);
-        ImageEntity img = new ImageEntity(file.getOriginalFilename(), file.getContentType(),
-                compressBytes(file.getBytes()), 1);
-        imageRepository.save(img);
-        return ResponseEntity.status(HttpStatus.OK);
-    }
-
-    @GetMapping(path = { "/get/{imageName}" })
-    public ImageEntity getImage(@PathVariable("imageName") Integer userId) throws IOException {
-
-        final Optional<ImageEntity> retrievedImage = imageRepository.findByUserId(userId);
-        ImageEntity img = new ImageEntity(retrievedImage.get().getName(), retrievedImage.get().getType(),
-                decompressBytes(retrievedImage.get().getPicByte()), retrievedImage.get().getUserId());
-        return img;
-    }
-
-    // compress the image bytes before storing it in the database
-    public static byte[] compressBytes(byte[] data) {
-        Deflater deflater = new Deflater();
-        deflater.setInput(data);
-        deflater.finish();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer);
-            outputStream.write(buffer, 0, count);
-        }
+    public ResponseEntity uploadImage(@RequestParam("imageFile") MultipartFile file) {
         try {
-            outputStream.close();
-        } catch (IOException e) {
+            ImageEntity img = service.uploadImageProfile(file);
+            return new ResponseEntity(null, HttpStatus.OK);
+        } catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
-
-        return outputStream.toByteArray();
     }
 
-    // uncompress the image bytes before returning it to the angular application
-    public static byte[] decompressBytes(byte[] data) {
-        Inflater inflater = new Inflater();
-        inflater.setInput(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
+    @GetMapping("/get/{imageName}")
+    public ResponseEntity getImage(@PathVariable("imageName") Integer userId) {
         try {
-            while (!inflater.finished()) {
-                int count = inflater.inflate(buffer);
-                outputStream.write(buffer, 0, count);
-            }
-            outputStream.close();
-        } catch (IOException ioe) {
-        } catch (DataFormatException e) {
+            ImageEntity img = service.getImage(userId);
+            return new ResponseEntity(img, HttpStatus.OK);
+        } catch(IOException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return outputStream.toByteArray();
     }
+
+
 }
