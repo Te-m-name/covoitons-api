@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 public class Schedule {
 
-    @Scheduled( initialDelay = 3 * 1000, fixedDelay = 2 * 1000)
+    @Scheduled( initialDelay = 10 * 1000, fixedDelay = 10 * 1000)
     public void writeCurrentTime() {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss sss");

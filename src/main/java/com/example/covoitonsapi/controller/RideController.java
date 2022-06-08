@@ -1,5 +1,6 @@
 package com.example.covoitonsapi.controller;
 
+import com.example.covoitonsapi.dto.RecurrentRideDto;
 import com.example.covoitonsapi.dto.RideDto;
 import com.example.covoitonsapi.entity.RideEntity;
 import com.example.covoitonsapi.service.RideService;
@@ -117,6 +118,40 @@ public class RideController {
         try {
             return new ResponseEntity(rideService.getLast5Rides(), HttpStatus.OK);
         } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("addRecurrentRide")
+    public ResponseEntity<Integer> addRecurrentRide(@RequestBody RecurrentRideDto dto){
+
+        Date today = new Date();
+        int test_date = dto.getDate().compareTo(today);
+
+        if(test_date<0){
+            return new ResponseEntity("Date incorrecte", HttpStatus.BAD_REQUEST);
+        }
+
+        if(dto.getPlaces()<1){
+            return new ResponseEntity("Nombre de place incorrect", HttpStatus.BAD_REQUEST);
+        }
+
+        RideDto rideDto = new RideDto();
+
+        rideDto.setCity(dto.getCity());
+        rideDto.setStreet(dto.getStreet());
+        rideDto.setPost_code(dto.getPost_code());
+        rideDto.setDate(dto.getDate());
+        rideDto.setArrival_time(dto.getArrival_time());
+        rideDto.setHome_to_office(dto.getHome_to_office());
+        rideDto.setPlaces(dto.getPlaces());
+        rideDto.setDeparture_date(dto.getDate());
+
+        try{
+            rideService.add(rideDto);
+            Integer id = rideService.addRecurrent(dto);
+            return new ResponseEntity<>(id, HttpStatus.OK);
+        }catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

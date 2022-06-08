@@ -1,5 +1,6 @@
 package com.example.covoitonsapi.service;
 
+import com.example.covoitonsapi.dto.RecurrentRideDto;
 import com.example.covoitonsapi.dto.RideDto;
 import com.example.covoitonsapi.entity.RideEntity;
 import com.example.covoitonsapi.entity.UserEntity;
@@ -116,5 +117,10 @@ public class RideService implements IRideService {
     public List<RideDto> getLast5Rides() {
         List<RideEntity> lastRides = rideRepository.findTop4ByOrderByIdDesc();
         return lastRides.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
+
+    public Integer addRecurrent(RecurrentRideDto dto){
+
+        return 1;
     }
 }
