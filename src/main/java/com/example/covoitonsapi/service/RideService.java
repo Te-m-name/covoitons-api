@@ -48,6 +48,8 @@ public class RideService implements IRideService {
         dto.setDriverFirstname(user.getFirstname());
         dto.setDriverLastname(user.getLastname());
         dto.setArrival_time(entity.getArrivalTime());
+        dto.setLat(entity.getLat());
+        dto.setLng(entity.getLng());
 
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
@@ -80,6 +82,8 @@ public class RideService implements IRideService {
         entity.setPlaces(dto.getPlaces());
         entity.setUserEntity(currentUser);
         entity.setDate(dto.getDeparture_date());
+        entity.setLat(dto.getLat());
+        entity.setLng(dto.getLng());
 
         entity = rideRepository.saveAndFlush(entity);
 
