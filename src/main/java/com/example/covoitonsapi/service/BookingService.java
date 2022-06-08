@@ -66,8 +66,15 @@ public class BookingService implements IBookingService {
 
         RideEntity rideEntity = rideRepository.findById(dto.getRide_id()).get();
 
+        UserEntity userEntity = userRepository.findById(dto.getUser_id()).get();
+
+        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
         if (rideEntity.getPlaces() == 0)
             throw  new IllegalStateException("No places available");
+
+        if (currentUser == userEntity)
+            throw  new IllegalStateException("permission denied, you are the driver");
 
         entity.setRide(rideEntity);
         places = rideEntity.getPlaces()-1;
@@ -75,7 +82,6 @@ public class BookingService implements IBookingService {
 
         entity.setAccepted(null);
 
-        UserEntity userEntity = userRepository.findById(dto.getUser_id()).get();
         entity.setUser(userEntity);
 
         bookingRepository.saveAndFlush(entity);
@@ -101,11 +107,11 @@ public class BookingService implements IBookingService {
     @Override
     public Integer acceptBooking(Integer id) {
 
-        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-
         RidesUsersEntity entity = bookingRepository.findById(id).get();
 
         RideEntity rideEntity = rideRepository.findById(entity.getRide().getId()).get();
+
+        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         Integer idDriver = rideEntity.getUserEntity().getID();
 
@@ -121,13 +127,13 @@ public class BookingService implements IBookingService {
     @Override
     public Integer declineBooking(Integer id) {
 
-        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-
         RidesUsersEntity entity = bookingRepository.findById(id).get();
 
         RideEntity rideEntity = rideRepository.findById(entity.getRide().getId()).get();
 
         Integer idDriver = rideEntity.getUserEntity().getID();
+
+        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         if (idDriver != currentUser.getID())
             throw  new IllegalStateException("permission denied");
