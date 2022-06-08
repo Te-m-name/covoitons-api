@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "https://covoitons-client-team-name4.vercel.app"})
 @RestController
 @RequestMapping("ride")
 @Slf4j
@@ -45,13 +45,11 @@ public class RideController {
 
         Integer ID = Integer.parseInt(id);
 
-        RideDto dto = rideService.getNextRide(ID);
-
         try {
+            RideDto dto = rideService.getNextRide(ID);
             return new ResponseEntity(dto, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity("Aucun trajet réservé", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -85,6 +83,7 @@ public class RideController {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("bookedRides/{id}")
     public ResponseEntity<List<RideDto>> getBookedRides(@PathVariable Integer id) {
         try {
@@ -93,6 +92,7 @@ public class RideController {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("proposedRides/{id}")
     public ResponseEntity<List<RideDto>> getProposedRides(@PathVariable Integer id) {
         try {

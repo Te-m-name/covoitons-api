@@ -13,11 +13,13 @@ public class RidesUsersEntity {
     @Column(name="id")
     private Integer id;
 
-    @Column(name="id_user")
-    private Integer id_user;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_user")
+    private UserEntity user;
 
-    @Column(name="id_ride")
-    private Integer id_ride;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_ride")
+    private RideEntity ride;
 
     @Column(name = "accepted")
     private Boolean accepted;
@@ -30,20 +32,20 @@ public class RidesUsersEntity {
         this.id = id;
     }
 
-    public Integer getId_user() {
-        return id_user;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setId_user(Integer id_user) {
-        this.id_user = id_user;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    public Integer getId_ride() {
-        return id_ride;
+    public RideEntity getRide() {
+        return ride;
     }
 
-    public void setId_ride(Integer id_ride) {
-        this.id_ride = id_ride;
+    public void setRide(RideEntity ride) {
+        this.ride = ride;
     }
 
     public Boolean getAccepted() {

@@ -32,6 +32,7 @@ public class RideService implements IRideService {
     public RideDto toDto(RideEntity entity) {
 
         RideDto dto = new RideDto();
+
         UserEntity user = entity.getUserEntity();
 
         dto.setDate(entity.getDeparture_time());
@@ -45,6 +46,7 @@ public class RideService implements IRideService {
         dto.setId_ride(entity.getId());
         dto.setDriverFirstname(user.getFirstname());
         dto.setDriverLastname(user.getLastname());
+        dto.setArrival_time(entity.getArrivalTime());
 
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
