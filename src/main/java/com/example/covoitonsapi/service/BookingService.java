@@ -35,31 +35,45 @@ public class BookingService implements IBookingService {
 
         BookingDto dto = new BookingDto();
 
-        dto.setId(entity.getId());
-        dto.setRide_id(entity.getRide().getId());
-        dto.setUser_id(entity.getUser().getID());
+        UserEntity user = entity.getUser();
 
-        return dto;
+        RideEntity ride = entity.getRide();
+
+        dto.setId(entity.getId());
+        dto.setRide_id(ride.getId());
+        dto.setUser_id(user.getID());
+        dto.setAccepted(entity.getAccepted());
+        dto.setDeparture_date(ride.getDeparture_time());
+        dto.setUserIdentity(user.getFirstname() + " " + user.getLastname());
+
+        if (ride.getHome_to_office()){
+            dto.setDeparture(ride.getStreet() + " " + ride.getPost_code() + " " + ride.getCity());
+            dto.setArrival("ipipoe");
+
+            return dto;
+        } else {
+            dto.setDeparture("ipipoe");
+            dto.setArrival(ride.getStreet() + " " + ride.getPost_code() + " " + ride.getCity());
+            return dto;
+        }
     }
 
     @Override
     public Integer book(BookingDto dto) {
 
         RidesUsersEntity entity = new RidesUsersEntity();
-        //diminuer le nombre de place disponibles
         //Voir la possibiliter de limiter la réservation
-        //RideEntity rideEntity = rideRepository.findById(entity.getId_ride()).get();
-        //rideEntity.setPlaces();
-
-        entity.setAccepted(null);
 
         RideEntity rideEntity = rideRepository.findById(dto.getRide_id()).get();
 
         if (rideEntity.getPlaces() == 0)
+            throw  new IllegalStateException("No places available");
 
         entity.setRide(rideEntity);
         places = rideEntity.getPlaces()-1;
         rideEntity.setPlaces(places);
+
+        entity.setAccepted(null);
 
         UserEntity userEntity = userRepository.findById(dto.getUser_id()).get();
         entity.setUser(userEntity);
@@ -74,7 +88,12 @@ public class BookingService implements IBookingService {
 
         RidesUsersEntity entity = bookingRepository.findById(id).get();
 
+        RideEntity rideEntity = rideRepository.findById(entity.getRide().getId()).get();
+
         //Rétablir le nombre de place
+        places = rideEntity.getPlaces()+1;
+        rideEntity.setPlaces(places);
+
         bookingRepository.deleteById(entity.getId());
         return true;
     }
@@ -102,7 +121,42 @@ public class BookingService implements IBookingService {
     @Override
     public Integer declineBooking(Integer id) {
 
-        return null;
+        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        RidesUsersEntity entity = bookingRepository.findById(id).get();
+
+        RideEntity rideEntity = rideRepository.findById(entity.getRide().getId()).get();
+
+        Integer idDriver = rideEntity.getUserEntity().getID();
+
+        if (idDriver != currentUser.getID())
+            throw  new IllegalStateException("permission denied");
+
+        places = rideEntity.getPlaces()+1;
+        rideEntity.setPlaces(places);
+
+        entity.setAccepted(false);
+        bookingRepository.saveAndFlush(entity);
+
+        return entity.getId();
+    }
+
+    @Override
+    public Boolean verify(Integer id) {
+        /*
+        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        RidesUsersEntity entity = bookingRepository.findById(id).get();
+
+        RideEntity rideEntity = rideRepository.findById(entity.getRide().getId()).get();
+
+        Integer idDriver = rideEntity.getUserEntity().getID();
+
+        if (idDriver != currentUser.getID())
+            throw  new IllegalStateException("permission denied");
+
+        */
+        return true;
     }
 
     @Override
