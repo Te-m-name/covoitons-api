@@ -49,6 +49,12 @@ public class RideEntity {
     @JoinColumn(name="id_drive", referencedColumnName = "id")
     private List<RidesUsersEntity> ridesUsersEntityList;
 
+    @Column(name="lat")
+    private Float lat;
+
+    @Column(name="lng")
+    private Float lng;
+
     public Integer getId() {
         return id;
     }
@@ -135,5 +141,21 @@ public class RideEntity {
 
     public void setRidesUsersEntityList(List<RidesUsersEntity> ridesUsersEntityList) {
         this.ridesUsersEntityList = ridesUsersEntityList;
+    }
+
+    public Float getLat() {
+        return lat;
+    }
+
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
+
+    public Float getLng() {
+        return lng;
+    }
+
+    public void setLng(Float lng) {
+        this.lng = lng;
     }
 }
