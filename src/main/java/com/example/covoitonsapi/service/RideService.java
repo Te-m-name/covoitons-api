@@ -91,7 +91,7 @@ public class RideService implements IRideService {
 
     @Override
     public List<RideDto> getAllRides () {
-        List<RideEntity> ridesList = rideRepository.findAll();
+        List<RideEntity> ridesList = rideRepository.findAllFuture();
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 
