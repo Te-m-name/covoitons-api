@@ -14,16 +14,19 @@ import java.util.List;
 public interface RideRepository extends JpaRepository<RideEntity, Integer> {
 
     @Query(value = "select * from rides where city = ?1 and home_to_office = ?2 and date = ?3", nativeQuery = true)
-    List<RideEntity> findByCityAndHome_to_officeAndDeparture_time(String city, Boolean home_to_office, LocalDate date);
+    List<RideEntity> findByCityAndHome_to_officeAndDeparture_time(String city, Boolean home_to_office, String date);
     List<RideEntity> findByCity(String city);
 
-    @Query(value = "select TOP 1 * from rides_users join users on rides_users.id_passenger = users.id join rides on rides_users.id_ride = rides.id\n" +
-            "where users.id = ?1 and departure_time > CURRENT_TIMESTAMP order by departure_time", nativeQuery = true)
+    @Query(value = "select TOP 1 * from rides_users join users on rides_users.id_user = users.id join rides on rides_users.id_ride = rides.id\n" +
+            "where id_user = ?1 and departure_time > CURRENT_TIMESTAMP and accepted = 'true' order by departure_time", nativeQuery = true)
     RideEntity nextRide(Integer id);
-    @Query(value = "select * from rides_users join users on rides_users.id_passenger = users.id join rides on rides_users.id_ride = rides.id\n" +
-            "where users.id = ?1 and departure_time > CURRENT_TIMESTAMP and accepted = 'true' order by departure_time", nativeQuery = true)
+    @Query(value = "select * from rides_users join users on rides_users.id_user = users.id join rides on rides_users.id_ride = rides.id\n" +
+            "where id_user = ?1 and departure_time > CURRENT_TIMESTAMP and accepted = 'true' order by departure_time", nativeQuery = true)
     List<RideEntity> bookedRides(Integer id);
     @Query(value = "select distinct * from rides where rides.id_driver = ?1 and departure_time > CURRENT_TIMESTAMP order by departure_time", nativeQuery = true)
     List<RideEntity> proposedRides(Integer id);
     List<RideEntity> findTop4ByOrderByIdDesc();
+
+    @Query(value = "select  * from rides where departure_time > CURRENT_TIMESTAMP order by departure_time", nativeQuery = true)
+    List<RideEntity> findAllFuture();
 }

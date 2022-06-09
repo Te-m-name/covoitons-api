@@ -43,6 +43,31 @@ public class UserEntity {
     @Column(name="deleted_at")
     private LocalDateTime deleted_at;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_driver", referencedColumnName = "id")
+    private List<RideEntity> rideEntityList;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_user", referencedColumnName = "id")
+    private List<RidesUsersEntity> ridesUsersEntityList;
+
+
+    public List<RidesUsersEntity> getRidesUsersEntityList() {
+        return ridesUsersEntityList;
+    }
+
+    public void setRidesUsersEntityList(List<RidesUsersEntity> ridesUsersEntityList) {
+        this.ridesUsersEntityList = ridesUsersEntityList;
+    }
+
+    public List<RideEntity> getRideEntityList() {
+        return rideEntityList;
+    }
+
+    public void setRideEntityList(List<RideEntity> rideEntityList) {
+        this.rideEntityList = rideEntityList;
+    }
+
     public Integer getID() {
         return ID;
     }

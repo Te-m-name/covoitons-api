@@ -1,8 +1,12 @@
 package com.example.covoitonsapi.service;
 
+import com.example.covoitonsapi.dto.RecurrentRideDto;
 import com.example.covoitonsapi.dto.RideDto;
+import com.example.covoitonsapi.entity.DelaisEntity;
+import com.example.covoitonsapi.entity.RecurrentRideEntity;
 import com.example.covoitonsapi.entity.RideEntity;
 import com.example.covoitonsapi.entity.UserEntity;
+import com.example.covoitonsapi.repository.RecurrentRideRepository;
 import com.example.covoitonsapi.repository.RideRepository;
 import com.example.covoitonsapi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +29,9 @@ public class RideService implements IRideService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RecurrentRideRepository recurrentRideRepository;
+
     @Override
     public Boolean exist(Integer id) { return rideRepository.existsById(id); }
 
@@ -32,6 +39,7 @@ public class RideService implements IRideService {
     public RideDto toDto(RideEntity entity) {
 
         RideDto dto = new RideDto();
+
         UserEntity user = entity.getUserEntity();
 
         dto.setDate(entity.getDeparture_time());
@@ -45,6 +53,9 @@ public class RideService implements IRideService {
         dto.setId_ride(entity.getId());
         dto.setDriverFirstname(user.getFirstname());
         dto.setDriverLastname(user.getLastname());
+        dto.setArrival_time(entity.getArrivalTime());
+        dto.setLat(entity.getLat());
+        dto.setLng(entity.getLng());
 
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
@@ -68,6 +79,7 @@ public class RideService implements IRideService {
         UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         RideEntity entity = new RideEntity();
 
+        entity.setUserEntity(currentUser);
         entity.setCity(dto.getCity());
         entity.setStreet(dto.getStreet());
         entity.setPost_code(dto.getPost_code());
@@ -75,8 +87,9 @@ public class RideService implements IRideService {
         entity.setArrivalTime(dto.getArrival_time());
         entity.setHome_to_office(dto.getHome_to_office());
         entity.setPlaces(dto.getPlaces());
-        entity.setUserEntity(currentUser);
         entity.setDate(dto.getDeparture_date());
+        entity.setLat(dto.getLat());
+        entity.setLng(dto.getLng());
 
         entity = rideRepository.saveAndFlush(entity);
 
@@ -85,12 +98,12 @@ public class RideService implements IRideService {
 
     @Override
     public List<RideDto> getAllRides () {
-        List<RideEntity> ridesList = rideRepository.findAll();
+        List<RideEntity> ridesList = rideRepository.findAllFuture();
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 
     @Override
-    public List<RideDto> getRideByCity(String city, Boolean home_to_office, LocalDate date) {
+    public List<RideDto> getRideByCity(String city, Boolean home_to_office, String date) {
         List<RideEntity> ridesList = rideRepository.findByCityAndHome_to_officeAndDeparture_time(city, home_to_office, date);
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
@@ -114,5 +127,51 @@ public class RideService implements IRideService {
     public List<RideDto> getLast5Rides() {
         List<RideEntity> lastRides = rideRepository.findTop4ByOrderByIdDesc();
         return lastRides.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
+
+    public Integer addRecurrent(RecurrentRideDto dto){
+
+        UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        RecurrentRideEntity entity = new RecurrentRideEntity();
+        DelaisEntity delaisEntity = new DelaisEntity();
+        delaisEntity.setId(dto.getId_delais());
+
+        entity.setHome_to_office(dto.getHome_to_office());
+        entity.setDate(dto.getDate());
+        entity.setArrivalTime(dto.getArrival_time());
+        entity.setPlaces(dto.getPlaces());
+        entity.setStreet(dto.getStreet());
+        entity.setPost_code(dto.getPost_code());
+        entity.setCity(dto.getCity());
+        entity.setEnable(dto.getEnable());
+        entity.setEnd_date(dto.getEnd_Date());
+        entity.setDelais(delaisEntity);
+        entity.setLat(dto.getLat());
+        entity.setLng(dto.getLng());
+        entity.setUserEntity(currentUser);
+
+        entity = recurrentRideRepository.saveAndFlush(entity);
+
+        return entity.getId();
+    }
+
+    public Date generateRecurrentRide(RecurrentRideEntity entity){
+        RideEntity rideEntity = new RideEntity();
+        
+        rideEntity.setUserEntity(entity.getUserEntity());
+        rideEntity.setCity(entity.getCity());
+        rideEntity.setStreet(entity.getStreet());
+        rideEntity.setPost_code(entity.getPost_code());
+        rideEntity.setDeparture_time(entity.getDate());
+        rideEntity.setArrivalTime(entity.getArrivalTime());
+        rideEntity.setHome_to_office(entity.getHome_to_office());
+        rideEntity.setPlaces(entity.getPlaces());
+        rideEntity.setDate(entity.getDate());
+        rideEntity.setLat(entity.getLat());
+        rideEntity.setLng(entity.getLng());
+
+        rideEntity = rideRepository.saveAndFlush(rideEntity);
+
+        return rideEntity.getDeparture_time();
     }
 }

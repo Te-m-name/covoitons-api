@@ -22,6 +22,8 @@ public class RideDto {
     private Integer id_user;
     private String driverFirstname;
     private String driverLastname;
+    private Float lat;
+    private Float lng;
 
 
     //Getters & Setters
@@ -135,5 +137,21 @@ public class RideDto {
 
     public void setId_ride(Integer id_ride) {
         this.id_ride = id_ride;
+    }
+
+    public Float getLat() {
+        return lat;
+    }
+
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
+
+    public Float getLng() {
+        return lng;
+    }
+
+    public void setLng(Float lng) {
+        this.lng = lng;
     }
 }

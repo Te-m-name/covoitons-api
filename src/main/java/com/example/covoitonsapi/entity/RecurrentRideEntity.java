@@ -1,37 +1,33 @@
 package com.example.covoitonsapi.entity;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name="rides")
-public class RideEntity {
+@Table(name = "recurrents_rides")
+public class RecurrentRideEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name ="id")
     private Integer id;
-    
-    @Column(name = "departure_time")
-    private Date departure_time;
-
-    @Column(name = "date")
-    private Date date;
-
-    @Column(name = "home_to_office")
-    private Boolean home_to_office;
-
-    @Column(name ="places")
-    private Integer places;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_driver")
     private UserEntity userEntity;
+
+    @Column(name = "home_to_office")
+    private Boolean home_to_office;
+
+    @Column(name = "date")
+    private Date date;
+
+    @Column(name="arrival_time")
+    private LocalTime arrivalTime;
+
+    @Column(name ="places")
+    private Integer places;
 
     @Column(name="street")
     private String street;
@@ -41,13 +37,16 @@ public class RideEntity {
 
     @Column(name="city")
     private String city;
-    
-    @Column(name="arrival_time")
-    private LocalTime arrivalTime;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_drive", referencedColumnName = "id")
-    private List<RidesUsersEntity> ridesUsersEntityList;
+    @Column(name = "enable")
+    private Boolean enable;
+
+    @Column(name = "end_date")
+    private Date end_date;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_delais")
+    private DelaisEntity delais;
 
     @Column(name="lat")
     private Float lat;
@@ -63,20 +62,12 @@ public class RideEntity {
         this.id = id;
     }
 
-    public LocalTime getArrivalTime() {
-        return arrivalTime;
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
-    public void setArrivalTime(LocalTime arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    public Date getDeparture_time() {
-        return departure_time;
-    }
-
-    public void setDeparture_time(Date departure_time) {
-        this.departure_time = departure_time;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
     public Boolean getHome_to_office() {
@@ -85,6 +76,22 @@ public class RideEntity {
 
     public void setHome_to_office(Boolean home_to_office) {
         this.home_to_office = home_to_office;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public LocalTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 
     public Integer getPlaces() {
@@ -119,28 +126,28 @@ public class RideEntity {
         this.city = city;
     }
 
-    public Date getDate() {
-        return date;
+    public Boolean getEnable() {
+        return enable;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
     }
 
-    public UserEntity getUserEntity() {
-        return userEntity;
+    public Date getEnd_date() {
+        return end_date;
     }
 
-    public void setUserEntity(UserEntity userEntity) {
-        this.userEntity = userEntity;
+    public void setEnd_date(Date end_date) {
+        this.end_date = end_date;
     }
 
-    public List<RidesUsersEntity> getRidesUsersEntityList() {
-        return ridesUsersEntityList;
+    public DelaisEntity getDelais() {
+        return delais;
     }
 
-    public void setRidesUsersEntityList(List<RidesUsersEntity> ridesUsersEntityList) {
-        this.ridesUsersEntityList = ridesUsersEntityList;
+    public void setDelais(DelaisEntity delais) {
+        this.delais = delais;
     }
 
     public Float getLat() {

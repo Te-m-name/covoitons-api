@@ -23,6 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.nio.charset.StandardCharsets;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -50,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/user/confirm").permitAll();
         http.authorizeRequests().antMatchers("/user/current-user").permitAll();
         http.authorizeRequests().antMatchers(GET, "/ride/**").permitAll();
+        http.authorizeRequests().antMatchers( "/booking/**").permitAll();
         http.authorizeRequests().antMatchers(GET, "/admin/**").hasAnyAuthority("admin");
         http.authorizeRequests().antMatchers(PATCH, "/admin/**").hasAnyAuthority("admin");
         http.authorizeRequests().antMatchers(DELETE, "/admin/**").hasAnyAuthority("admin");
