@@ -51,6 +51,10 @@ public class UserEntity {
     @JoinColumn(name="id_user", referencedColumnName = "id")
     private List<RidesUsersEntity> ridesUsersEntityList;
 
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id_sender", referencedColumnName = "id")
+//    private List<MessagesEntity> messagesEntities;
+
 
     public List<RidesUsersEntity> getRidesUsersEntityList() {
         return ridesUsersEntityList;
