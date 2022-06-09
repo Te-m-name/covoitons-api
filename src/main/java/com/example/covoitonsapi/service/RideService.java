@@ -98,12 +98,12 @@ public class RideService implements IRideService {
 
     @Override
     public List<RideDto> getAllRides () {
-        List<RideEntity> ridesList = rideRepository.findAll();
+        List<RideEntity> ridesList = rideRepository.findAllFuture();
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 
     @Override
-    public List<RideDto> getRideByCity(String city, Boolean home_to_office, LocalDate date) {
+    public List<RideDto> getRideByCity(String city, Boolean home_to_office, String date) {
         List<RideEntity> ridesList = rideRepository.findByCityAndHome_to_officeAndDeparture_time(city, home_to_office, date);
         return ridesList.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
