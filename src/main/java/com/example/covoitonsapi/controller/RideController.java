@@ -146,6 +146,8 @@ public class RideController {
         rideDto.setHome_to_office(dto.getHome_to_office());
         rideDto.setPlaces(dto.getPlaces());
         rideDto.setDeparture_date(dto.getDate());
+        rideDto.setLat(dto.getLat());
+        rideDto.setLng(dto.getLng());
 
         try{
             rideService.add(rideDto);

@@ -17,6 +17,24 @@ public class RecurrentRideDto {
     private Boolean enable;
     private Date end_Date;
     private Integer id_delais;
+    private Float lat;
+    private Float lng;
+
+    public Float getLat() {
+        return lat;
+    }
+
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
+
+    public Float getLng() {
+        return lng;
+    }
+
+    public void setLng(Float lng) {
+        this.lng = lng;
+    }
 
     public LocalTime getArrival_time() {
         return arrival_time;
