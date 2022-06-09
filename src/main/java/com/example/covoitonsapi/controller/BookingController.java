@@ -18,8 +18,8 @@ public class BookingController {
     @Autowired
     private BookingService service;
 
-    @PostMapping("book")
-    public ResponseEntity<Boolean> booked(@RequestBody BookingDto dto){
+    @PostMapping("bookARide")
+    public ResponseEntity<Boolean> bookeARide(@RequestBody BookingDto dto){
 
         try{
             service.book(dto);
@@ -30,8 +30,8 @@ public class BookingController {
         }
     }
 
-    @GetMapping("cancelBooking/{id}")
-    public ResponseEntity<Boolean> canceled(@PathVariable Integer id){
+    @DeleteMapping("cancelBooking/{id}")
+    public ResponseEntity<Boolean> cancelABooking(@PathVariable Integer id){
 
         try{
             service.canceleBooking(id);
@@ -43,7 +43,7 @@ public class BookingController {
         }
     }
     @PatchMapping("acceptBooking/{id}")
-    public ResponseEntity<Boolean> accepted(@PathVariable Integer id){
+    public ResponseEntity<Boolean> acceptBooking(@PathVariable Integer id){
 
         try{
 
@@ -56,10 +56,23 @@ public class BookingController {
         }
     }
 
+    @PatchMapping("declineBooking/{id}")
+    public ResponseEntity<Boolean> declineBooking(@PathVariable Integer id){
+
+        try{
+
+            service.declineBooking(id);
+            return new ResponseEntity(true, HttpStatus.OK);
+
+        }catch (Exception e){
+
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
-    @GetMapping("getMine/{id}")
-    public ResponseEntity<List<BookingDto>> getMine(@PathVariable String id) {
+    @GetMapping("getBookingOnMyRide/{id}")
+    public ResponseEntity<List<BookingDto>> getAllBooking(@PathVariable String id) {
 
         Integer ID = Integer.parseInt(id);
 
@@ -73,5 +86,19 @@ public class BookingController {
         }
     }
 
+    @GetMapping("getMyBookingRequest/{id}")
+    public ResponseEntity<List<BookingDto>> getMyBooking(@PathVariable String id) {
+
+        Integer ID = Integer.parseInt(id);
+
+        try {
+
+            return new ResponseEntity(service.getMyBooking(ID), HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

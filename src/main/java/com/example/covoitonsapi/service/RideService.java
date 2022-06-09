@@ -59,11 +59,11 @@ public class RideService implements IRideService {
 
         if (entity.getHome_to_office()){
             dto.setDeparture(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
-            dto.setArrival("IPIPOE");
+            dto.setArrival("Ipipoe");
 
             return dto;
         } else {
-            dto.setDeparture("IPIPOE");
+            dto.setDeparture("Ipipoe");
             dto.setArrival(entity.getStreet() + " " + entity.getPost_code() + " " + entity.getCity());
             return dto;
         }
