@@ -36,7 +36,7 @@ public class MessageController {
         }
     }
 
-    @GetMapping("send")
+    @PostMapping("send")
     public ResponseEntity<MessageDto> send(@RequestBody MessageDto dto) {
         try {
             dto = messagingService.send(dto);

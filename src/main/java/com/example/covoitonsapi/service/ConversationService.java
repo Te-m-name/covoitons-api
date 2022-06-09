@@ -28,15 +28,12 @@ public class ConversationService implements IConversationService{
     }
     @Override
     public List<ConversationDto> getLatestMessageOfEachConversation(Integer user) throws IOException{
-        System.out.println("hey");
         List<ConversationEntity> entities = conversationRepository.getLastestMessageOfEachConversation(user);
-        System.out.println("hey2");
         return entities.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 
     @Override
     public List<ConversationDto> getAllConv() throws IOException {
-        System.out.println("psssst");
         List<ConversationEntity> entities = conversationRepository.findAll();
         return entities.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
