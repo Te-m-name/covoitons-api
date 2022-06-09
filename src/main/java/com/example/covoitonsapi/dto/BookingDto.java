@@ -1,5 +1,6 @@
 package com.example.covoitonsapi.dto;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 public class BookingDto {
@@ -11,11 +12,15 @@ public class BookingDto {
 
     private String userIdentity;
 
+    private String  driverIdentity;
+
     private String departure;
 
     private String arrival;
 
     private Date departure_date;
+
+    private LocalTime arrival_time;
 
     public Integer getId() {
         return id;
@@ -53,6 +58,14 @@ public class BookingDto {
         return userIdentity;
     }
 
+    public String getDriverIdentity() {
+        return driverIdentity;
+    }
+
+    public void setDriverIdentity(String driverIdentity) {
+        this.driverIdentity = driverIdentity;
+    }
+
     public void setUserIdentity(String userIdentity) {
         this.userIdentity = userIdentity;
     }
@@ -79,5 +92,13 @@ public class BookingDto {
 
     public void setDeparture_date(Date departure_date) {
         this.departure_date = departure_date;
+    }
+
+    public LocalTime getArrival_time() {
+        return arrival_time;
+    }
+
+    public void setArrival_time(LocalTime arrival_time) {
+        this.arrival_time = arrival_time;
     }
 }

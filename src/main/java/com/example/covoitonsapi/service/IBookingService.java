@@ -23,5 +23,6 @@ public interface IBookingService {
     Boolean verify (Integer id);
 
     List<BookingDto> getBookingOnMyRide(Integer id);
+    List<BookingDto> getMyBooking(Integer id);
 
 }

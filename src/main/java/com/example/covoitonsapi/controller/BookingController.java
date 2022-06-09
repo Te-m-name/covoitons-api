@@ -18,7 +18,7 @@ public class BookingController {
     @Autowired
     private BookingService service;
 
-    @PostMapping("book")
+    @PostMapping("bookARide")
     public ResponseEntity<Boolean> bookeARide(@RequestBody BookingDto dto){
 
         try{
@@ -71,7 +71,7 @@ public class BookingController {
     }
 
 
-    @GetMapping("getMine/{id}")
+    @GetMapping("getBookingOnMyRide/{id}")
     public ResponseEntity<List<BookingDto>> getAllBooking(@PathVariable String id) {
 
         Integer ID = Integer.parseInt(id);
@@ -86,5 +86,19 @@ public class BookingController {
         }
     }
 
+    @GetMapping("getMyBookingRequest/{id}")
+    public ResponseEntity<List<BookingDto>> getMyBooking(@PathVariable String id) {
+
+        Integer ID = Integer.parseInt(id);
+
+        try {
+
+            return new ResponseEntity(service.getMyBooking(ID), HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

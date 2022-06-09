@@ -12,7 +12,11 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<RidesUsersEntity, Integer> {
 
 
-    @Query(value = "select * from rides_users join rides on rides_users.id_ride = rides.id where rides.id_driver = ?1 order by departure_time", nativeQuery = true)
+    @Query(value = "select * from rides_users join rides on rides_users.id_ride = rides.id where rides.id_driver = ?1 and rides_users.accepted is null order by departure_time", nativeQuery = true)
     List<RidesUsersEntity> BookingOnMyRide(Integer id);
+
+
+    @Query(value = "select * from rides_users join rides on rides_users.id_ride = rides.id where rides_users.id_user = ?1 and rides_users.accepted is null order by departure_time", nativeQuery = true)
+    List<RidesUsersEntity> MyBookingRequest(Integer id);
 
 }

@@ -44,15 +44,17 @@ public class BookingService implements IBookingService {
         dto.setUser_id(user.getID());
         dto.setAccepted(entity.getAccepted());
         dto.setDeparture_date(ride.getDeparture_time());
+        dto.setArrival_time(ride.getArrivalTime());
         dto.setUserIdentity(user.getFirstname() + " " + user.getLastname());
+        dto.setDriverIdentity(ride.getUserEntity().getFirstname()+ " " +ride.getUserEntity().getLastname());
 
         if (ride.getHome_to_office()){
             dto.setDeparture(ride.getStreet() + " " + ride.getPost_code() + " " + ride.getCity());
-            dto.setArrival("ipipoe");
+            dto.setArrival("Ipipoe");
 
             return dto;
         } else {
-            dto.setDeparture("ipipoe");
+            dto.setDeparture("Ipipoe");
             dto.setArrival(ride.getStreet() + " " + ride.getPost_code() + " " + ride.getCity());
             return dto;
         }
@@ -66,7 +68,7 @@ public class BookingService implements IBookingService {
 
         RideEntity rideEntity = rideRepository.findById(dto.getRide_id()).get();
 
-        UserEntity userEntity = userRepository.findById(dto.getUser_id()).get();
+        UserEntity userEntity = userRepository.findById(rideEntity.getUserEntity().getID()).get();
 
         UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
@@ -82,7 +84,7 @@ public class BookingService implements IBookingService {
 
         entity.setAccepted(null);
 
-        entity.setUser(userEntity);
+        entity.setUser(currentUser);
 
         bookingRepository.saveAndFlush(entity);
 
@@ -149,6 +151,8 @@ public class BookingService implements IBookingService {
 
     @Override
     public Boolean verify(Integer id) {
+
+        // Méthode pour eviter ma repetition du code
         /*
         UserEntity currentUser = userRepository.findByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
@@ -171,5 +175,13 @@ public class BookingService implements IBookingService {
         List<RidesUsersEntity> bookingOnMyRide = bookingRepository.BookingOnMyRide(id);
 
         return bookingOnMyRide.stream().map(e -> toDto(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookingDto> getMyBooking(Integer id) {
+
+        List<RidesUsersEntity> myBookingRequest = bookingRepository.MyBookingRequest(id);
+
+        return myBookingRequest.stream().map(e -> toDto(e)).collect(Collectors.toList());
     }
 }
