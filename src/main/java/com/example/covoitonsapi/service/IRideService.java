@@ -19,7 +19,7 @@ public interface IRideService {
     List<RideDto> getBookedRides(Integer id);
     List<RideDto> getProposedRides(Integer id);RideDto getNextRide(Integer id);
 
-    List<RideDto> getRideByCity(String city, Boolean home_to_office, String date);
+    List<RideDto> getRideByCity(String city, Boolean home_to_office, String date, String date2);
     List<RideDto> getLast5Rides();
 
 }
