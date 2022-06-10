@@ -46,11 +46,17 @@ public class ImageController {
 
     @GetMapping("/get")
     public ResponseEntity getImage() {
-        try {
-            ImageEntity img = service.getImage();
-            return new ResponseEntity(img, HttpStatus.OK);
-        } catch(IOException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+        Integer id = userService.getCurrentUser().getId();
+
+        if(service.ImgExist(id)) {
+            try {
+                ImageEntity img = service.getImage();
+                return new ResponseEntity(img, HttpStatus.OK);
+            } catch (IOException e) {
+                return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
         }
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 }

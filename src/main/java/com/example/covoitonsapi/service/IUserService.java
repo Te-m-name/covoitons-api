@@ -23,5 +23,7 @@ public interface IUserService {
 
     UserEntity getUser(String email);
 
+    UserDto getUserById(Integer id);
+
     void refreshToken(HttpServletRequest request, HttpServletResponse response, String authorizationHeader) throws IOException;
 }

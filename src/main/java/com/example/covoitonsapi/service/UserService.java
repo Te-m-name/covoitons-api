@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -123,6 +124,17 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public UserEntity getUser(String email) {
         return repository.findByEmail(email);
+    }
+
+    @Override
+    public UserDto getUserById(Integer id) {
+        UserEntity entity = repository.findById(id).get();
+        UserDto dto = new UserDto();
+        dto.setId(entity.getID());
+        dto.setFirstname(entity.getFirstname());
+        dto.setLastname(entity.getLastname());
+
+        return dto;
     }
 
     @Override
