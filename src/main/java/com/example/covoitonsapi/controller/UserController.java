@@ -108,4 +108,15 @@ public class UserController {
             throw new RuntimeException("Refresh token is missing");
         }
     }
+
+    @GetMapping("getUser/{id}")
+    public ResponseEntity<UserDto> getUserId(@PathVariable Integer id) {
+        try {
+            UserDto dto = service.getUserById(id);
+            return new ResponseEntity(dto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }
